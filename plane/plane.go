@@ -2,8 +2,8 @@
 package plane
 
 import (
-	"github.com/downflux/orca/geometry/line"
-	"github.com/downflux/orca/geometry/vector"
+	"github.com/downflux/go-geometry/line"
+	"github.com/downflux/go-geometry/vector"
 )
 
 // HP defines a half-plane, geometrically consisting of a normal vector n to the

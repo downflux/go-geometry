@@ -3,7 +3,7 @@ package plane
 import (
 	"testing"
 
-	"github.com/downflux/orca/geometry/vector"
+	"github.com/downflux/go-geometry/vector"
 )
 
 const tolerance = 1e-10

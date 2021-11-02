@@ -3,8 +3,8 @@ package line
 import (
 	"math"
 
-	"github.com/downflux/orca/geometry/circle"
-	"github.com/downflux/orca/geometry/vector"
+	"github.com/downflux/go-geometry/circle"
+	"github.com/downflux/go-geometry/vector"
 )
 
 // L defines a parametric line of the form

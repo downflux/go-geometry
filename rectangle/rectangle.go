@@ -3,7 +3,7 @@ package rectangle
 import (
 	"math"
 
-	"github.com/downflux/orca/geometry/vector"
+	"github.com/downflux/go-geometry/vector"
 )
 
 type R struct {

@@ -4,8 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/downflux/orca/geometry/circle"
-	"github.com/downflux/orca/geometry/vector"
+	"github.com/downflux/go-geometry/circle"
+	"github.com/downflux/go-geometry/vector"
 )
 
 const (
