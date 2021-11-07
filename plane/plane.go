@@ -32,6 +32,8 @@ func New(p vector.V, n vector.V) *HP {
 	}
 }
 
+func (hp HP) L() line.L { return hp.l }
+
 func (hp HP) D() vector.V { return hp.l.D() }
 func (hp HP) P() vector.V { return hp.l.P() }
 
@@ -56,6 +58,15 @@ func (hp HP) In(p vector.V) bool {
 	// As the left half of the plane is considered invalid, we are looking
 	// instead for the complementary result.
 	return vector.Determinant(hp.D(), v) <= 0
+}
+
+// Disjoint returns if the region of interection between two planes is empty.
+//
+// Disjoint checks if the characteristic lines of the two planes are parallel,
+// and if the a line drawn between two points on the planes, away from the first
+// plane, lie in the feasible region of the first plane.
+func Disjoint(a HP, b HP, tolerance float64) bool {
+	return vector.Within(a.N(), vector.Scale(-1, b.N()), tolerance) && !a.In(vector.Sub(b.P(), a.P()))
 }
 
 func Within(a HP, b HP, tolerance float64) bool {

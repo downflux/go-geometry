@@ -86,3 +86,95 @@ func TestIn(t *testing.T) {
 		})
 	}
 }
+
+func TestDisjoint(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		a    HP
+		b    HP
+		want bool
+	}{
+		{
+			name: "Parallel",
+			a: *New(
+				*vector.New(0, 1),
+				*vector.New(0, 1),
+			),
+			b: *New(
+				*vector.New(0, -1),
+				*vector.New(0, 1),
+			),
+			want: false,
+		},
+		{
+			name: "Parallel/OrderInvariance",
+			a: *New(
+				*vector.New(0, -1),
+				*vector.New(0, 1),
+			),
+			b: *New(
+				*vector.New(0, 1),
+				*vector.New(0, 1),
+			),
+			want: false,
+		},
+
+		{
+			name: "AntiParallel/Facing",
+			a: *New(
+				*vector.New(0, 1),
+				*vector.New(0, -1),
+			),
+			b: *New(
+				*vector.New(0, -1),
+				*vector.New(0, 1),
+			),
+			want: false,
+		},
+		{
+			name: "AntiParallel/Facing/OrderInvariance",
+			a: *New(
+				*vector.New(0, -1),
+				*vector.New(0, 1),
+			),
+			b: *New(
+				*vector.New(0, 1),
+				*vector.New(0, -1),
+			),
+			want: false,
+		},
+
+		{
+			name: "AntiParallel/Away/OrderInvariance",
+			a: *New(
+				*vector.New(0, 1),
+				*vector.New(0, 1),
+			),
+			b: *New(
+				*vector.New(0, -1),
+				*vector.New(0, -1),
+			),
+			want: true,
+		},
+		{
+			name: "AntiParallel/Away/OrderInvariance",
+			a: *New(
+				*vector.New(0, -1),
+				*vector.New(0, -1),
+			),
+			b: *New(
+				*vector.New(0, 1),
+				*vector.New(0, 1),
+			),
+			want: true,
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := Disjoint(c.a, c.b, tolerance); got != c.want {
+				t.Errorf("Disjoint() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}
