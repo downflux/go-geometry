@@ -12,7 +12,7 @@ import (
 // N.B.: By arbitrary convention, vectors pointing away from N are not
 // permissible within the half-plane.
 type HP struct {
-	line.L
+	l line.L
 }
 
 // New constructs a half-plane passing through a point P and with normal N.
@@ -28,9 +28,12 @@ func New(p vector.V, n vector.V) *HP {
 	d := *vector.New(-n.Y(), n.X())
 
 	return &HP{
-		L: *line.New(p, d),
+		l: *line.New(p, d),
 	}
 }
+
+func (hp HP) D() vector.V { return hp.l.D() }
+func (hp HP) P() vector.V { return hp.l.P() }
 
 // N returns the normal vector of the plane, pointing away from the invalid
 // region.
