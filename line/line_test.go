@@ -57,13 +57,13 @@ func TestT(t *testing.T) {
 	}{
 		{
 			name: "SimpleHorizontal",
-			l:    L{p: *vector.New(1, 0), d: *vector.New(0, 1)},
+			l:    L{p: *vector.New(0, 1), d: *vector.New(1, 0)},
 			t:    1,
 			want: *vector.New(1, 1),
 		},
 		{
 			name: "SimpleVertical",
-			l:    L{p: *vector.New(0, 1), d: *vector.New(1, 0)},
+			l:    L{p: *vector.New(1, 0), d: *vector.New(0, 1)},
 			t:    1,
 			want: *vector.New(1, 1),
 		},
@@ -73,6 +73,43 @@ func TestT(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			if got := c.l.T(c.t); !vector.Within(got, c.want, tolerance) {
 				t.Errorf("T() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}
+
+func TestProject(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		l    L
+		v    vector.V
+		want float64
+	}{
+		{
+			name: "OnLine/SimpleHorizontal",
+			l:    L{p: *vector.New(0, 1), d: *vector.New(1, 0)},
+			v:    *vector.New(1, 1),
+			want: 1,
+		},
+		{
+			name: "OnLine/SimpleVertical",
+			l:    L{p: *vector.New(1, 0), d: *vector.New(0, 1)},
+			v:    *vector.New(1, 1),
+			want: 1,
+		},
+
+		{
+			name: "OffLine/SimpleHorizontal",
+			l:    L{p: *vector.New(0, 1), d: *vector.New(1, 0)},
+			v:    *vector.New(0, 0),
+			want: 0,
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := c.l.Project(c.v); math.Abs(got-c.want) > tolerance {
+				t.Errorf("Project() = %v, want = %v", got, c.want)
 			}
 		})
 	}
