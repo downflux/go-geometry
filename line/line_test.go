@@ -84,27 +84,27 @@ func TestIntersection(t *testing.T) {
 		l       L
 		m       L
 		success bool
-		want    float64
+		want    vector.V
 	}{
 		{
 			name:    "SimpleOrigin",
 			l:       L{p: *vector.New(0, 0), d: *vector.New(1, 0)},
 			m:       L{p: *vector.New(0, 0), d: *vector.New(0, 1)},
 			success: true,
-			want:    0,
+			want:    *vector.New(0, 0),
 		},
 		{
 			name:    "SimpleYIntercept",
 			l:       L{p: *vector.New(0, 0), d: *vector.New(1, 0)},
 			m:       L{p: *vector.New(1, 0), d: *vector.New(0, 1)},
 			success: true,
-			want:    1,
+			want:    *vector.New(1, 0),
 		},
 	}
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got, ok := c.l.Intersect(c.m, tolerance); ok != c.success || math.Abs(got-c.want) >= tolerance {
+			if got, ok := c.l.Intersect(c.m, tolerance); ok != c.success || !vector.Within(got, c.want, tolerance) {
 				t.Errorf("Intersect() = %v, %v, want = %v, %v", got, ok, c.want, c.success)
 			}
 		})
@@ -117,43 +117,55 @@ func TestIntersectionCircle(t *testing.T) {
 		l       L
 		c       circle.C
 		success bool
-		want    []float64
+		want    []vector.V
 	}{
 		{
 			name:    "SimpleOriginIntersection",
 			l:       L{p: *vector.New(0, 0), d: *vector.New(1, 0)},
 			c:       *circle.New(*vector.New(0, 0), 1),
 			success: true,
-			want:    []float64{-1, 1},
+			want: []vector.V{
+				*vector.New(-1, 0),
+				*vector.New(1, 0),
+			},
 		},
 		{
 			name:    "SimpleNoIntersection",
 			l:       L{p: *vector.New(0, 0), d: *vector.New(1, 0)},
 			c:       *circle.New(*vector.New(0, 2), 1),
 			success: false,
-			want:    []float64{0, 0},
+			want: []vector.V{
+				*vector.New(0, 0),
+				*vector.New(0, 0),
+			},
 		},
 		{
 			name:    "SimpleTangent",
 			l:       L{p: *vector.New(0, 0), d: *vector.New(1, 0)},
 			c:       *circle.New(*vector.New(0, 1), 1),
 			success: true,
-			want:    []float64{0, 0},
+			want: []vector.V{
+				*vector.New(0, 0),
+				*vector.New(0, 0),
+			},
 		},
 		{
 			name:    "OffCenterLineIntersect",
 			l:       L{p: *vector.New(0, 1), d: *vector.New(1, 0)},
 			c:       *circle.New(*vector.New(0, 0), 1),
 			success: true,
-			want:    []float64{0, 0},
+			want: []vector.V{
+				*vector.New(0, 1),
+				*vector.New(0, 1),
+			},
 		},
 	}
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			tl, tr, ok := c.l.IntersectCircle(c.c)
-			if ok != c.success || math.Abs(tl-c.want[0]) >= tolerance || math.Abs(tr-c.want[1]) >= tolerance {
-				t.Fatalf("IntersectCircle() = %v, %v, %v, want = %v, %v, %v", tl, tr, ok, c.want[0], c.want[1], c.success)
+			vl, vr, ok := c.l.IntersectCircle(c.c)
+			if ok != c.success || !vector.Within(vl, c.want[0], tolerance) || !vector.Within(vr, c.want[1], tolerance) {
+				t.Fatalf("IntersectCircle() = %v, %v, %v, want = %v, %v, %v", vl, vr, ok, c.want[0], c.want[1], c.success)
 			}
 		})
 	}

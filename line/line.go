@@ -17,13 +17,20 @@ type L struct {
 
 func New(p vector.V, d vector.V) *L { return &L{p: p, d: d} }
 
-func (l L) P() vector.V          { return l.p }
-func (l L) D() vector.V          { return l.d }
+func (l L) P() vector.V { return l.p }
+func (l L) D() vector.V { return l.d }
+
+// T calculates the vector value on the line which corresponds to the input
+// parametric t-value.
 func (l L) T(t float64) vector.V { return vector.Add(l.p, vector.Scale(t, l.d)) }
 
-// Intersect returns the t-value of a line l intersected with another line.
-//
-// To find the intersection point, utilize L.T().
+// Project calculates the projected t-value of v onto l by finding the point on
+// L closest to v.
+func (l L) Project(v vector.V) float64 {
+	return vector.Dot(l.D(), vector.Sub(v, l.P()))
+}
+
+// Intersect returns the intersection point between two lines.
 //
 // Returns error if the lines are parallel.
 //
@@ -67,20 +74,18 @@ func (l L) T(t float64) vector.V { return vector.Add(l.p, vector.Scale(t, l.d)) 
 //   t = || E x (P - Q) || / || D x E ||
 //
 // See https://gamedev.stackexchange.com/a/44733 for more information.
-//
-// TODO(minkezhang): Return a vector of the intersection point instead.
-func (l L) Intersect(m L, tolerance float64) (float64, bool) {
+func (l L) Intersect(m L, tolerance float64) (vector.V, bool) {
 	d := vector.Determinant(l.D(), m.D())
 	n := vector.Determinant(m.D(), vector.Sub(l.P(), m.P()))
 
 	if math.Abs(d) < tolerance {
-		return 0, false
+		return vector.V{}, false
 	}
 
-	return n / d, true
+	return l.T(n / d), true
 }
 
-// IntersectCircle returns the t-values at which the line intersects a circle.
+// IntersectCircle returns the intersection points between a line and a circle.
 // If the line does not intersect a circle, the function will return not
 // successful.
 //
@@ -91,9 +96,7 @@ func (l L) Intersect(m L, tolerance float64) (float64, bool) {
 // same.
 //
 // See https://stackoverflow.com/a/1084899 for more information.
-//
-// TODO(minkezhang): Return a vector tuple of the intersection points instead.
-func (l L) IntersectCircle(c circle.C) (float64, float64, bool) {
+func (l L) IntersectCircle(c circle.C) (vector.V, vector.V, bool) {
 	p := vector.Sub(l.P(), c.P())
 
 	dot := vector.Dot(p, l.D())
@@ -101,7 +104,7 @@ func (l L) IntersectCircle(c circle.C) (float64, float64, bool) {
 
 	// The line does not intersect the circle.
 	if discriminant < 0 {
-		return 0, 0, false
+		return vector.V{}, vector.V{}, false
 	}
 
 	// Find two intersections between line and circle. This is equivalent to
@@ -110,7 +113,7 @@ func (l L) IntersectCircle(c circle.C) (float64, float64, bool) {
 	tl := -dot - math.Sqrt(discriminant)
 	tr := -dot + math.Sqrt(discriminant)
 
-	return tl, tr, true
+	return l.T(tl), l.T(tr), true
 }
 
 // Distance finds the distance between the line l and a point p.
