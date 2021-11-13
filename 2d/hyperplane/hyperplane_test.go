@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/downflux/go-geometry/2d/vector"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestIn(t *testing.T) {
@@ -14,7 +15,7 @@ func TestIn(t *testing.T) {
 	testConfigs := []struct {
 		name  string
 		hp    HP
-		d     vector.V
+		basis []vector.V
 		tests []check
 	}{
 		{
@@ -23,7 +24,7 @@ func TestIn(t *testing.T) {
 				*vector.New(0, 0),
 				*vector.New(1, 0),
 			),
-			d: *vector.New(0, 1),
+			basis: []vector.V{*vector.New(0, 1)},
 			tests: []check{
 				{v: *vector.New(0, 0), want: true},
 				{v: *vector.New(1, 0), want: true},
@@ -36,7 +37,7 @@ func TestIn(t *testing.T) {
 				*vector.New(0, 0),
 				*vector.New(0, 1),
 			),
-			d: *vector.New(-1, 0),
+			basis: []vector.V{*vector.New(-1, 0)},
 			tests: []check{
 				{v: *vector.New(0, 0), want: true},
 				{v: *vector.New(0, 1), want: true},
@@ -49,7 +50,7 @@ func TestIn(t *testing.T) {
 				*vector.New(0, 0),
 				*vector.New(1, 1),
 			),
-			d: *vector.New(-1, 1),
+			basis: []vector.V{*vector.New(-1, 1)},
 			tests: []check{
 				{v: *vector.New(0, 0), want: true},
 				{v: *vector.New(1, 1), want: true},
@@ -62,7 +63,7 @@ func TestIn(t *testing.T) {
 				*vector.New(0, 1),
 				*vector.New(1, 1),
 			),
-			d: *vector.New(-1, 1),
+			basis: []vector.V{*vector.New(-1, 1)},
 			tests: []check{
 				{v: *vector.New(0, 0), want: false},
 				{v: *vector.New(1, 1), want: true},
@@ -74,8 +75,9 @@ func TestIn(t *testing.T) {
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
 			for _, test := range c.tests {
-				if got := c.hp.D(); !vector.Within(got, c.d) {
-					t.Fatalf("D() = %v, want = %v", got, c.d)
+				got := c.hp.Basis()
+				if diff := cmp.Diff(c.basis, got); diff != "" {
+					t.Fatalf("Basis() mismatch (-want +got):\n%v", diff)
 				}
 				if got := c.hp.In(test.v); got != test.want {
 					t.Errorf("In(%v) = %v, want = %v", test.v, got, test.want)

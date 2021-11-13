@@ -21,29 +21,38 @@ type HP struct {
 // TODO(minkezhang): Refactor to use L(P, N) instead; define D as clockwise
 // rotation from N.
 func New(p vector.V, n vector.V) *HP {
-	// D returns the characteristic line along the plane is bisected. Points
-	// to the "left" of the line are not permissible.
-	//
-	// N.B.: RVO2 defines the "right" side of the line as non-permissible,
-	// but we have considered an anti-clockwise rotation of N(), e.g. +X to
-	// +Y, to be more natural. See
-	// https://github.com/snape/RVO2/blob/57098835aa27dda6d00c43fc0800f621724884cc/src/Agent.cpp#L314
-	// for evidence of this distinction.
-	d := *vector.New(-n.Y(), n.X())
-
 	return &HP{
-		l: *line.New(p, d),
+		l: *line.New(p, n),
 	}
 }
 
-// TODO(minkezhang): Refactor to return line instead.
-func (hp HP) D() vector.V { return hp.l.D() }
+// Basis returns a set of N-dimensional vectors whose span is the hyperplane. In
+// 2D ambient space, a hyperspace is a line, and its basis is a singular 2D
+// vector pointing away from the hyperplane normal. Note that the span of the
+// basis is not that of the ambient space -- the cardinality of the returned
+// value must match the the dimension of the underlying hyperplane, i.e. N - 1.
+//
+// A vector v relative to the hyperplane is considered to be in the feasible
+// region of the hyperplane if for all basis vectors b,
+//
+//   v x b <= 0
+//
+// In 2D ambient space, "left" of the line are not permissible.
+//
+// N.B.: RVO2 defines the "right" side of the line as non-permissible, but we
+// have considered an anti-clockwise rotation of N(), e.g. +X to +Y, to be more
+// natural. See
+// https://github.com/snape/RVO2/blob/57098835aa27dda6d00c43fc0800f621724884cc/src/Agent.cpp#L314
+// for evidence of this distinction.
+func (hp HP) Basis() []vector.V {
+	return []vector.V{*vector.New(-hp.N().Y(), hp.N().X())}
+}
 
 func (hp HP) P() vector.V { return hp.l.P() }
 
 // N returns the normal vector of the plane, pointing away from the invalid
 // region.
-func (hp HP) N() vector.V { return *vector.New(hp.D().Y(), -hp.D().X()) }
+func (hp HP) N() vector.V { return hp.l.D() }
 
 // In checks if a given point in vector space is in valid region of the
 // half-plane.
@@ -51,17 +60,21 @@ func (hp HP) In(p vector.V) bool {
 	// Generate a vector with tail on D and pointing towards the input.
 	v := vector.Sub(p, hp.P())
 
-	// Check relative orientation between w and D.
+	// Check relative orientation between v and D.
 	//
 	// Remember that by the right hand rule, if v is on the "left" of the
-	// plane,
+	// hyperplane,
 	//
 	//   D x v > 0, and
 	//   N • v > 0
 	//
 	// As the left half of the plane is considered invalid, we are looking
 	// instead for the complementary result.
-	return vector.Determinant(hp.D(), v) <= 0
+	in := true
+	for _, b := range hp.Basis() {
+		in = in && vector.Determinant(b, v) <= 0
+	}
+	return in
 }
 
 // Disjoint returns if the region of interection between two planes is empty.
