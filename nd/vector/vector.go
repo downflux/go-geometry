@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/downflux/go-geometry/epsilon"
@@ -29,11 +30,12 @@ type V struct {
 
 func New(xs ...float64) *V { return &V{xs: xs} }
 
-// D returns the dimension of the vector.
-func (v V) D() D { return D(len(v.xs)) }
+// Dimension returns the dimension of the vector.
+func (v V) Dimension() D { return D(len(v.xs)) }
+
 func (v V) X(i D) float64 {
-	if i >= v.D() {
-		return 0
+	if i >= v.Dimension() {
+		panic(fmt.Sprintf("cannot access %v-dimensional data in a %v dimensional vector", i, v.Dimension()))
 	}
 	return v.xs[i]
 }
@@ -44,14 +46,14 @@ func Unit(v V) V                   { return Scale(1/Magnitude(v), v) }
 
 func Dot(v V, u V) float64 {
 	r := 0.0
-	for i := D(0); i < max(v.D(), u.D()); i++ {
+	for i := D(0); i < max(v.Dimension(), u.Dimension()); i++ {
 		r += v.X(i) * u.X(i)
 	}
 	return r
 }
 
 func Add(v V, u V) V {
-	d := max(v.D(), u.D())
+	d := max(v.Dimension(), u.Dimension())
 	xs := make([]float64, int(d))
 	for i := D(0); i < d; i++ {
 		xs[i] = v.X(i) + u.X(i)
@@ -60,17 +62,17 @@ func Add(v V, u V) V {
 }
 
 func Sub(v V, u V) V {
-	d := max(v.D(), u.D())
+	d := max(v.Dimension(), u.Dimension())
 	xs := make([]float64, int(d))
-	for i := D(0); i < v.D(); i++ {
+	for i := D(0); i < v.Dimension(); i++ {
 		xs[i] = v.X(i) - u.X(i)
 	}
 	return V{xs: xs}
 }
 
 func Scale(c float64, v V) V {
-	xs := make([]float64, int(v.D()))
-	for i := D(0); i < v.D(); i++ {
+	xs := make([]float64, int(v.Dimension()))
+	for i := D(0); i < v.Dimension(); i++ {
 		xs[i] = c * v.X(i)
 	}
 	return V{xs: xs}

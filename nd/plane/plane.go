@@ -15,8 +15,8 @@ type P struct {
 }
 
 func New(p vector.V, n vector.V) *P {
-	if n.D() != p.D() {
-		panic(fmt.Sprintf("cannot construct a plane with mismatching %v-D offset and %v-D normal vectors", p.D(), n.D()))
+	if n.Dimension() != p.Dimension() {
+		panic(fmt.Sprintf("cannot construct a plane with mismatching %v-dimensional offset and %v-dimensional normal vectors", p.Dimension(), n.Dimension()))
 	}
 	return &P{
 		n: n,

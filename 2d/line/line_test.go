@@ -168,8 +168,8 @@ func TestIntersectionCircle(t *testing.T) {
 			c:       *circle.New(*vector.New(0, 2), 1),
 			success: false,
 			want: []vector.V{
-				*vector.New(0, 0),
-				*vector.New(0, 0),
+				vector.V{},
+				vector.V{},
 			},
 		},
 		{

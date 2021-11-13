@@ -13,7 +13,9 @@ type L struct {
 	d vector.V
 }
 
-func New(p vector.V, d vector.V) *L { return &L{p: p, d: d} }
+func New(p vector.V, d vector.V) *L {
+	return &L{p: p, d: d}
+}
 
 func (l L) P() vector.V { return l.p }
 func (l L) D() vector.V { return l.d }

@@ -32,7 +32,6 @@ func New(p vector.V, n vector.V) *HP {
 	}
 }
 
-func (hp HP) L() line.L   { return hp.l }
 func (hp HP) D() vector.V { return hp.l.D() }
 func (hp HP) P() vector.V { return hp.l.P() }
 
