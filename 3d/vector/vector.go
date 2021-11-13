@@ -32,3 +32,4 @@ func Scale(c float64, v V) V       { return V(vector.Scale(c, vector.V(v))) }
 func Within(v V, u V) bool         { return vector.Within(vector.V(v), vector.V(u)) }
 func SquaredMagnitude(v V) float64 { return vector.SquaredMagnitude(vector.V(v)) }
 func Magnitude(v V) float64        { return vector.Magnitude(vector.V(v)) }
+func Unit(v V) V                   { return V(vector.Unit(vector.V(v))) }
