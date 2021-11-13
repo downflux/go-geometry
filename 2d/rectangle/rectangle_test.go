@@ -148,7 +148,6 @@ func TestIntersection(t *testing.T) {
 				got,
 				cmp.AllowUnexported(
 					R{},
-					vector.V{},
 				),
 			); diff != "" {
 				t.Errorf("Intersect() mismatch (-want +got):\n%v", diff)

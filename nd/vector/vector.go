@@ -24,20 +24,21 @@ const (
 )
 
 // V is an n-length vector.
-type V struct {
-	xs []float64
+type V []float64
+
+func New(xs ...float64) *V {
+	v := V(xs)
+	return &v
 }
 
-func New(xs ...float64) *V { return &V{xs: xs} }
-
 // Dimension returns the dimension of the vector.
-func (v V) Dimension() D { return D(len(v.xs)) }
+func (v V) Dimension() D { return D(len(v)) }
 
 func (v V) X(i D) float64 {
 	if i >= v.Dimension() {
 		panic(fmt.Sprintf("cannot access %v-dimensional data in a %v dimensional vector", i, v.Dimension()))
 	}
-	return v.xs[i]
+	return v[i]
 }
 
 func SquaredMagnitude(v V) float64 { return Dot(v, v) }
@@ -58,7 +59,7 @@ func Add(v V, u V) V {
 	for i := D(0); i < d; i++ {
 		xs[i] = v.X(i) + u.X(i)
 	}
-	return V{xs: xs}
+	return V(xs)
 }
 
 func Sub(v V, u V) V {
@@ -67,7 +68,7 @@ func Sub(v V, u V) V {
 	for i := D(0); i < v.Dimension(); i++ {
 		xs[i] = v.X(i) - u.X(i)
 	}
-	return V{xs: xs}
+	return V(xs)
 }
 
 func Scale(c float64, v V) V {
@@ -75,7 +76,7 @@ func Scale(c float64, v V) V {
 	for i := D(0); i < v.Dimension(); i++ {
 		xs[i] = c * v.X(i)
 	}
-	return V{xs: xs}
+	return V(xs)
 }
 
 func Within(v V, u V) bool       { return epsilon.Within(SquaredMagnitude(Sub(u, v)), 0) }
