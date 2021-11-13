@@ -2,7 +2,7 @@ package segment
 
 import (
 	"github.com/downflux/go-geometry/line"
-	"github.com/downflux/go-geometry/vector/v2d"
+	"github.com/downflux/go-geometry/vector"
 )
 
 type S struct {
@@ -24,7 +24,7 @@ func (s S) TMin() float64 { return s.min }
 func (s S) TMax() float64 { return s.max }
 
 func (s S) Project(v vector.V) float64 {
-	t := s.l.Project(v)
+	t := s.l.T(v)
 	if t < s.TMin() {
 		return s.TMin()
 	} else if t > s.TMax() {

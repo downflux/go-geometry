@@ -1,3 +1,4 @@
+// Package circle is a 2D circle embedded in 2D ambient space.
 package circle
 
 import (
