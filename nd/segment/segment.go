@@ -1,3 +1,5 @@
+// Package segment is a 1D line segment embedded in an N-dimensional ambient
+// space.
 package segment
 
 import (
