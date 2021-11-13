@@ -17,6 +17,9 @@ type HP struct {
 }
 
 // New constructs a half-plane passing through a point P and with normal N.
+//
+// TODO(minkezhang): Refactor to use L(P, N) instead; define D as clockwise
+// rotation from N.
 func New(p vector.V, n vector.V) *HP {
 	// D returns the characteristic line along the plane is bisected. Points
 	// to the "left" of the line are not permissible.
@@ -33,7 +36,9 @@ func New(p vector.V, n vector.V) *HP {
 	}
 }
 
+// TODO(minkezhang): Refactor to return line instead.
 func (hp HP) D() vector.V { return hp.l.D() }
+
 func (hp HP) P() vector.V { return hp.l.P() }
 
 // N returns the normal vector of the plane, pointing away from the invalid
