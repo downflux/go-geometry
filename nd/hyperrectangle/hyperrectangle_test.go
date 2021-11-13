@@ -1,9 +1,9 @@
-package rectangle
+package hyperrectangle
 
 import (
 	"testing"
 
-	"github.com/downflux/go-geometry/2d/vector"
+	"github.com/downflux/go-geometry/nd/vector"
 	"github.com/google/go-cmp/cmp"
 )
 
