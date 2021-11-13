@@ -1,4 +1,5 @@
-// Package hyperplane defines a 2D geometric half-plane embedded in 3D ambient space.
+// Package hyperplane defines a 1D geometric hyperplane (i.e. a linear
+// constraint of two variables) embedded in 2D ambient space.
 package hyperplane
 
 import (
