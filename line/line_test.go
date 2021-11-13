@@ -1,15 +1,11 @@
 package line
 
 import (
-	"math"
 	"testing"
 
 	"github.com/downflux/go-geometry/circle"
-	"github.com/downflux/go-geometry/vector"
-)
-
-const (
-	tolerance = 1e-10
+	"github.com/downflux/go-geometry/epsilon"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 func TestDistance(t *testing.T) {
@@ -41,7 +37,7 @@ func TestDistance(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got := c.l.Distance(c.p); math.Abs(c.want-got) > tolerance {
+			if got := c.l.Distance(c.p); !epsilon.Within(c.want, got) {
 				t.Errorf("Distance() = %v, want = %v", got, c.want)
 			}
 		})
@@ -71,7 +67,7 @@ func TestT(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got := c.l.T(c.t); !vector.Within(got, c.want, tolerance) {
+			if got := c.l.T(c.t); !vector.Within(got, c.want) {
 				t.Errorf("T() = %v, want = %v", got, c.want)
 			}
 		})
@@ -108,7 +104,7 @@ func TestProject(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got := c.l.Project(c.v); math.Abs(got-c.want) > tolerance {
+			if got := c.l.Project(c.v); !epsilon.Within(got, c.want) {
 				t.Errorf("Project() = %v, want = %v", got, c.want)
 			}
 		})
@@ -141,7 +137,7 @@ func TestIntersection(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got, ok := c.l.Intersect(c.m, tolerance); ok != c.success || !vector.Within(got, c.want, tolerance) {
+			if got, ok := c.l.Intersect(c.m); ok != c.success || !vector.Within(got, c.want) {
 				t.Errorf("Intersect() = %v, %v, want = %v, %v", got, ok, c.want, c.success)
 			}
 		})
@@ -201,7 +197,7 @@ func TestIntersectionCircle(t *testing.T) {
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
 			vl, vr, ok := c.l.IntersectCircle(c.c)
-			if ok != c.success || !vector.Within(vl, c.want[0], tolerance) || !vector.Within(vr, c.want[1], tolerance) {
+			if ok != c.success || !vector.Within(vl, c.want[0]) || !vector.Within(vr, c.want[1]) {
 				t.Fatalf("IntersectCircle() = %v, %v, %v, want = %v, %v, %v", vl, vr, ok, c.want[0], c.want[1], c.success)
 			}
 		})

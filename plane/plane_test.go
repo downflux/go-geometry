@@ -3,10 +3,8 @@ package plane
 import (
 	"testing"
 
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
-
-const tolerance = 1e-10
 
 func TestIn(t *testing.T) {
 	type check struct {
@@ -76,7 +74,7 @@ func TestIn(t *testing.T) {
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
 			for _, test := range c.tests {
-				if got := c.hp.D(); !vector.Within(got, c.d, tolerance) {
+				if got := c.hp.D(); !vector.Within(got, c.d) {
 					t.Fatalf("D() = %v, want = %v", got, c.d)
 				}
 				if got := c.hp.In(test.v); got != test.want {
@@ -172,7 +170,7 @@ func TestDisjoint(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got := Disjoint(c.a, c.b, tolerance); got != c.want {
+			if got := Disjoint(c.a, c.b); got != c.want {
 				t.Errorf("Disjoint() = %v, want = %v", got, c.want)
 			}
 		})

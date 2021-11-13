@@ -1,7 +1,7 @@
 package circle
 
 import (
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 type C struct {

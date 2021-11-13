@@ -2,32 +2,83 @@ package vector
 
 import (
 	"math"
+
+	"github.com/downflux/go-geometry/epsilon"
 )
 
+type D int
+
+const (
+	// AXIS_X is a common alias for the first dimension.
+	AXIS_X D = iota
+
+	// AXIS_Y is a common alias for the second dimension.
+	AXIS_Y
+
+	// AXIS_Y is a common alias for the third dimension.
+	AXIS_Z
+)
+
+// V is an n-length vector.
 type V struct {
-	x, y float64
+	xs []float64
 }
 
-func New(x, y float64) *V { return &V{x: x, y: y} }
+func New(xs ...float64) *V { return &V{xs: xs} }
 
-func (v V) X() float64 { return v.x }
-func (v V) Y() float64 { return v.y }
-
-func Add(v, u V) V               { return V{x: v.x + u.x, y: v.y + u.y} }
-func Sub(v, u V) V               { return V{x: v.x - u.x, y: v.y - u.y} }
-func Scale(s float64, v V) V     { return V{x: s * v.x, y: s * v.y} }
-func Dot(v, u V) float64         { return v.x*u.x + v.y*u.y }
-func Determinant(v, u V) float64 { return v.x*u.y - v.y*u.x }
-
-func IsOrthogonal(v, u V) bool     { return Dot(v, u) == 0 }
-func SquaredMagnitude(a V) float64 { return Dot(a, a) }
-func Magnitude(a V) float64        { return math.Sqrt(SquaredMagnitude(a)) }
-func Unit(a V) V                   { return Scale(1/Magnitude(a), a) }
-func Rotate(theta float64, v V) V {
-	return V{
-		x: v.x*math.Cos(theta) - v.y*math.Sin(theta),
-		y: v.x*math.Sin(theta) + v.y*math.Cos(theta),
+// D returns the dimension of the vector.
+func (v V) D() D { return D(len(v.xs)) }
+func (v V) X(i D) float64 {
+	if i >= v.D() {
+		return 0
 	}
+	return v.xs[i]
 }
 
-func Within(a V, b V, tolerance float64) bool { return Magnitude(Sub(a, b)) < tolerance }
+func SquaredMagnitude(v V) float64 { return Dot(v, v) }
+func Magnitude(v V) float64        { return math.Sqrt(SquaredMagnitude(v)) }
+func Unit(v V) V                   { return Scale(1/Magnitude(v), v) }
+
+func Dot(v V, u V) float64 {
+	r := 0.0
+	for i := D(0); i < max(v.D(), u.D()); i++ {
+		r += v.X(i) * u.X(i)
+	}
+	return r
+}
+
+func Add(v V, u V) V {
+	d := max(v.D(), u.D())
+	xs := make([]float64, int(d))
+	for i := D(0); i < d; i++ {
+		xs[i] = v.X(i) + u.X(i)
+	}
+	return V{xs: xs}
+}
+
+func Sub(v V, u V) V {
+	d := max(v.D(), u.D())
+	xs := make([]float64, int(d))
+	for i := D(0); i < v.D(); i++ {
+		xs[i] = v.X(i) - u.X(i)
+	}
+	return V{xs: xs}
+}
+
+func Scale(c float64, v V) V {
+	xs := make([]float64, int(v.D()))
+	for i := D(0); i < v.D(); i++ {
+		xs[i] = c * v.X(i)
+	}
+	return V{xs: xs}
+}
+
+func Within(v V, u V) bool       { return epsilon.Within(SquaredMagnitude(Sub(u, v)), 0) }
+func IsOrthogonal(v V, u V) bool { return Dot(v, u) == 0 }
+
+func max(i D, j D) D {
+	if int(i) > int(j) {
+		return i
+	}
+	return j
+}

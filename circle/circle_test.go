@@ -3,7 +3,7 @@ package circle
 import (
 	"testing"
 
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 func TestIn(t *testing.T) {

@@ -2,7 +2,7 @@ package segment
 
 import (
 	"github.com/downflux/go-geometry/line"
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 type S struct {

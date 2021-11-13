@@ -3,7 +3,7 @@ package plane
 
 import (
 	"github.com/downflux/go-geometry/line"
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 // HP defines a half-plane, geometrically consisting of a normal vector n to the
@@ -65,10 +65,10 @@ func (hp HP) In(p vector.V) bool {
 // Disjoint checks if the characteristic lines of the two planes are parallel,
 // and if the a line drawn between two points on the planes, away from the first
 // plane, lie in the feasible region of the first plane.
-func Disjoint(a HP, b HP, tolerance float64) bool {
-	return vector.Within(a.N(), vector.Scale(-1, b.N()), tolerance) && !a.In(vector.Sub(b.P(), a.P()))
+func Disjoint(a HP, b HP) bool {
+	return vector.Within(a.N(), vector.Scale(-1, b.N())) && !a.In(vector.Sub(b.P(), a.P()))
 }
 
-func Within(a HP, b HP, tolerance float64) bool {
-	return vector.Within(a.N(), b.N(), tolerance) && vector.Within(a.P(), b.P(), tolerance)
+func Within(a HP, b HP) bool {
+	return vector.Within(a.N(), b.N()) && vector.Within(a.P(), b.P())
 }

@@ -4,7 +4,8 @@ import (
 	"math"
 
 	"github.com/downflux/go-geometry/circle"
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/epsilon"
+	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 // L defines a parametric line of the form
@@ -74,11 +75,11 @@ func (l L) Project(v vector.V) float64 {
 //   t = || E x (P - Q) || / || D x E ||
 //
 // See https://gamedev.stackexchange.com/a/44733 for more information.
-func (l L) Intersect(m L, tolerance float64) (vector.V, bool) {
+func (l L) Intersect(m L) (vector.V, bool) {
 	d := vector.Determinant(l.D(), m.D())
 	n := vector.Determinant(m.D(), vector.Sub(l.P(), m.P()))
 
-	if math.Abs(d) < tolerance {
+	if epsilon.Within(d, 0) {
 		return vector.V{}, false
 	}
 
