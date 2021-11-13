@@ -4,7 +4,7 @@ package line
 import (
 	"math"
 
-	"github.com/downflux/go-geometry/2d/circle"
+	"github.com/downflux/go-geometry/2d/hypersphere"
 	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/line"
 	"github.com/downflux/go-geometry/nd/vector"
@@ -90,7 +90,7 @@ func (l L) Intersect(m L) (v2d.V, bool) {
 // same.
 //
 // See https://stackoverflow.com/a/1084899 for more information.
-func (l L) IntersectCircle(c circle.C) (v2d.V, v2d.V, bool) {
+func (l L) IntersectCircle(c hypersphere.C) (v2d.V, v2d.V, bool) {
 	p := v2d.Sub(l.P(), c.P())
 
 	dot := v2d.Dot(p, l.D())

@@ -3,7 +3,7 @@ package line
 import (
 	"testing"
 
-	"github.com/downflux/go-geometry/2d/circle"
+	"github.com/downflux/go-geometry/2d/hypersphere"
 	"github.com/downflux/go-geometry/2d/vector"
 	"github.com/downflux/go-geometry/epsilon"
 )
@@ -148,14 +148,14 @@ func TestIntersectionCircle(t *testing.T) {
 	testConfigs := []struct {
 		name    string
 		l       L
-		c       circle.C
+		c       hypersphere.C
 		success bool
 		want    []vector.V
 	}{
 		{
 			name:    "SimpleOriginIntersection",
 			l:       *New(*vector.New(0, 0), *vector.New(1, 0)),
-			c:       *circle.New(*vector.New(0, 0), 1),
+			c:       *hypersphere.New(*vector.New(0, 0), 1),
 			success: true,
 			want: []vector.V{
 				*vector.New(-1, 0),
@@ -165,7 +165,7 @@ func TestIntersectionCircle(t *testing.T) {
 		{
 			name:    "SimpleNoIntersection",
 			l:       *New(*vector.New(0, 0), *vector.New(1, 0)),
-			c:       *circle.New(*vector.New(0, 2), 1),
+			c:       *hypersphere.New(*vector.New(0, 2), 1),
 			success: false,
 			want: []vector.V{
 				vector.V{},
@@ -175,7 +175,7 @@ func TestIntersectionCircle(t *testing.T) {
 		{
 			name:    "SimpleTangent",
 			l:       *New(*vector.New(0, 0), *vector.New(1, 0)),
-			c:       *circle.New(*vector.New(0, 1), 1),
+			c:       *hypersphere.New(*vector.New(0, 1), 1),
 			success: true,
 			want: []vector.V{
 				*vector.New(0, 0),
@@ -185,7 +185,7 @@ func TestIntersectionCircle(t *testing.T) {
 		{
 			name:    "OffCenterLineIntersect",
 			l:       *New(*vector.New(0, 1), *vector.New(1, 0)),
-			c:       *circle.New(*vector.New(0, 0), 1),
+			c:       *hypersphere.New(*vector.New(0, 0), 1),
 			success: true,
 			want: []vector.V{
 				*vector.New(0, 1),

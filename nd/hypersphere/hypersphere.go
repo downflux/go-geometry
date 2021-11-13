@@ -1,8 +1,8 @@
-// Package circle is a 2D circle embedded in 2D ambient space.
-package circle
+// Package hypersphere is an N-dimensional ball embedded into an N-dimensional ambient space.
+package hypersphere
 
 import (
-	"github.com/downflux/go-geometry/2d/vector"
+	"github.com/downflux/go-geometry/nd/vector"
 )
 
 type C struct {

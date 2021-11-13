@@ -1,4 +1,4 @@
-package circle
+package hypersphere
 
 import (
 	"testing"
@@ -15,25 +15,25 @@ func TestIn(t *testing.T) {
 	}{
 		{
 			name: "Origin/In",
-			c:    C{p: *vector.New(0, 0), r: 1},
+			c:    *New(*vector.New(0, 0), 1),
 			p:    *vector.New(0, 0),
 			want: true,
 		},
 		{
 			name: "Origin/Out",
-			c:    C{p: *vector.New(0, 0), r: 1},
+			c:    *New(*vector.New(0, 0), 1),
 			p:    *vector.New(0, 2),
 			want: false,
 		},
 		{
 			name: "Offset/In",
-			c:    C{p: *vector.New(100, 100), r: 1},
+			c:    *New(*vector.New(100, 100), 1),
 			p:    *vector.New(100, 99),
 			want: true,
 		},
 		{
 			name: "Offset/Out",
-			c:    C{p: *vector.New(100, 100), r: 1},
+			c:    *New(*vector.New(100, 100), 1),
 			p:    *vector.New(0, 0),
 			want: false,
 		},
