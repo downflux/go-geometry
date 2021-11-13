@@ -4,12 +4,12 @@ package line
 import (
 	"math"
 
-	"github.com/downflux/go-geometry/circle"
+	"github.com/downflux/go-geometry/2d/circle"
 	"github.com/downflux/go-geometry/epsilon"
-	"github.com/downflux/go-geometry/line"
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/nd/line"
+	"github.com/downflux/go-geometry/nd/vector"
 
-	v2d "github.com/downflux/go-geometry/vector/v2d"
+	v2d "github.com/downflux/go-geometry/2d/vector"
 )
 
 type L line.L

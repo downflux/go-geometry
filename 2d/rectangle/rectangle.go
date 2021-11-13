@@ -3,7 +3,7 @@ package rectangle
 import (
 	"math"
 
-	"github.com/downflux/go-geometry/vector/v2d"
+	"github.com/downflux/go-geometry/2d/vector"
 )
 
 type R struct {

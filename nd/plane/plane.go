@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/nd/vector"
 )
 
 type P struct {

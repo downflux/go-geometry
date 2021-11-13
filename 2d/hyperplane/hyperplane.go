@@ -2,8 +2,8 @@
 package hyperplane
 
 import (
-	"github.com/downflux/go-geometry/line/l2d"
-	"github.com/downflux/go-geometry/vector/v2d"
+	"github.com/downflux/go-geometry/2d/line"
+	"github.com/downflux/go-geometry/2d/vector"
 )
 
 // HP defines a half-plane, geometrically consisting of a normal vector n to the

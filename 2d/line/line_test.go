@@ -3,9 +3,9 @@ package line
 import (
 	"testing"
 
-	"github.com/downflux/go-geometry/circle"
+	"github.com/downflux/go-geometry/2d/circle"
+	"github.com/downflux/go-geometry/2d/vector"
 	"github.com/downflux/go-geometry/epsilon"
-	"github.com/downflux/go-geometry/vector/v2d"
 )
 
 func TestDistance(t *testing.T) {

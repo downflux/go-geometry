@@ -3,7 +3,7 @@ package rectangle
 import (
 	"testing"
 
-	"github.com/downflux/go-geometry/vector/v2d"
+	"github.com/downflux/go-geometry/2d/vector"
 	"github.com/google/go-cmp/cmp"
 )
 

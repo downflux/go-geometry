@@ -3,7 +3,7 @@ package vector
 import (
 	"math"
 
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/nd/vector"
 )
 
 type V vector.V

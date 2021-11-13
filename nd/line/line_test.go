@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/downflux/go-geometry/epsilon"
-	"github.com/downflux/go-geometry/vector"
+	"github.com/downflux/go-geometry/nd/vector"
 )
 
 func TestL(t *testing.T) {
