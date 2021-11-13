@@ -15,8 +15,11 @@ const (
 	// AXIS_Y is a common alias for the second dimension.
 	AXIS_Y
 
-	// AXIS_Y is a common alias for the third dimension.
+	// AXIS_Z is a common alias for the third dimension.
 	AXIS_Z
+
+	// AXIS_W is a common alias for the fourth dimension.
+	AXIS_W
 )
 
 // V is an n-length vector.

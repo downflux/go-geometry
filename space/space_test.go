@@ -1,4 +1,4 @@
-package plane
+package space
 
 import (
 	"testing"
