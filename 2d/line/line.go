@@ -23,7 +23,6 @@ func (l L) P() v2d.V          { return v2d.V(line.L(l).P()) }
 func (l L) D() v2d.V          { return v2d.V(line.L(l).D()) }
 func (l L) L(t float64) v2d.V { return v2d.V(line.L(l).L(t)) }
 func (l L) T(v v2d.V) float64 { return line.L(l).T(vector.V(v)) }
-func (l L) R() float64        { return line.L(l).R() }
 
 // Intersect returns the intersection point between two lines.
 //
