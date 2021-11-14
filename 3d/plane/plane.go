@@ -22,6 +22,7 @@ func New(p v3d.V, n v3d.V) *P {
 func (p P) N() v3d.V                 { return v3d.V(p.N()) }
 func (p P) P() v3d.V                 { return v3d.V(p.P()) }
 func (p P) Distance(v v3d.V) float64 { return plane.P(p).Distance(vector.V(v)) }
+func (p P) R() float64               { return plane.P(p).R() }
 
 func (p P) Intersect(q P) (l3d.L, bool) {
 	d := vector.V(v3d.Cross(p.N(), q.N()))

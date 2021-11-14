@@ -8,6 +8,12 @@ import (
 // L defines a parametric line of the form
 //
 //   L := P + tD
+//
+// Line also supports the Hesse-normal form API, i.e.
+//
+//   (D • X) / ||D|| + R = 0
+//
+// where R = -(D • P) / || D ||
 type L struct {
 	p vector.V
 	d vector.V
@@ -19,6 +25,7 @@ func New(p vector.V, d vector.V) *L {
 
 func (l L) P() vector.V { return l.p }
 func (l L) D() vector.V { return l.d }
+func (l L) R() float64  { return -vector.Dot(vector.Unit(l.D()), l.P()) }
 
 // L calculates the vector value on the line which corresponds to the input
 // parametric t-value.

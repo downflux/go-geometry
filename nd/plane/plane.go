@@ -8,6 +8,13 @@ import (
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
+// P implements a plane of the Hesse normal form
+//
+//   (N • X) / || N || + R = 0
+//
+// where
+//
+//   R = -(N • P) / || N ||
 type P struct {
 	n vector.V
 
@@ -26,6 +33,7 @@ func New(p vector.V, n vector.V) *P {
 
 func (p P) N() vector.V { return p.n }
 func (p P) P() vector.V { return p.p }
+func (p P) R() float64  { return -vector.Dot(vector.Unit(p.N()), p.P()) }
 
 func (p P) Distance(v vector.V) float64 {
 	return math.Abs(
