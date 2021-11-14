@@ -36,7 +36,7 @@ func (v V) Dimension() D { return D(len(v)) }
 
 func (v V) X(i D) float64 {
 	if i >= v.Dimension() {
-		panic(fmt.Sprintf("cannot access %v-dimensional data in a %v dimensional vector", i, v.Dimension()))
+		panic(fmt.Sprintf("cannot access %v-dimensional data in a %v dimensional vector", i+1, v.Dimension()))
 	}
 	return v[i]
 }
@@ -47,24 +47,33 @@ func Unit(v V) V                   { return Scale(1/Magnitude(v), v) }
 
 func Dot(v V, u V) float64 {
 	r := 0.0
-	for i := D(0); i < max(v.Dimension(), u.Dimension()); i++ {
+	if v.Dimension() != u.Dimension() {
+		panic("mismatching vector dimensions")
+	}
+	for i := D(0); i < v.Dimension(); i++ {
 		r += v.X(i) * u.X(i)
 	}
 	return r
 }
 
 func Add(v V, u V) V {
-	d := max(v.Dimension(), u.Dimension())
-	xs := make([]float64, int(d))
-	for i := D(0); i < d; i++ {
+	if v.Dimension() != u.Dimension() {
+		panic("mismatching vector dimensions")
+	}
+
+	xs := make([]float64, v.Dimension())
+	for i := D(0); i < v.Dimension(); i++ {
 		xs[i] = v.X(i) + u.X(i)
 	}
 	return V(xs)
 }
 
 func Sub(v V, u V) V {
-	d := max(v.Dimension(), u.Dimension())
-	xs := make([]float64, int(d))
+	if v.Dimension() != u.Dimension() {
+		panic("mismatching vector dimensions")
+	}
+
+	xs := make([]float64, v.Dimension())
 	for i := D(0); i < v.Dimension(); i++ {
 		xs[i] = v.X(i) - u.X(i)
 	}
@@ -81,10 +90,3 @@ func Scale(c float64, v V) V {
 
 func Within(v V, u V) bool       { return epsilon.Within(SquaredMagnitude(Sub(u, v)), 0) }
 func IsOrthogonal(v V, u V) bool { return Dot(v, u) == 0 }
-
-func max(i D, j D) D {
-	if int(i) > int(j) {
-		return i
-	}
-	return j
-}
