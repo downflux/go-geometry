@@ -17,8 +17,8 @@ func New(l l2d.L, min float64, max float64) *S {
 	return &s
 }
 
-func (s S) L() l2d.L                { return l2d.L(segment.S(s).L()) }
-func (s S) TMin() float64           { return segment.S(s).TMin() }
-func (s S) TMax() float64           { return segment.S(s).TMax() }
-func (s S) Project(v v2d.V) float64 { return segment.S(s).Project(vector.V(v)) }
-func (s S) Feasible() bool          { return segment.S(s).Feasible() }
+func (s S) L() l2d.L          { return l2d.L(segment.S(s).L()) }
+func (s S) TMin() float64     { return segment.S(s).TMin() }
+func (s S) TMax() float64     { return segment.S(s).TMax() }
+func (s S) T(v v2d.V) float64 { return segment.S(s).T(vector.V(v)) }
+func (s S) Feasible() bool    { return segment.S(s).Feasible() }

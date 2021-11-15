@@ -25,7 +25,7 @@ func (s S) L() line.L     { return s.l }
 func (s S) TMin() float64 { return s.min }
 func (s S) TMax() float64 { return s.max }
 
-func (s S) Project(v vector.V) float64 {
+func (s S) T(v vector.V) float64 {
 	t := s.l.T(v)
 	if t < s.TMin() {
 		return s.TMin()
