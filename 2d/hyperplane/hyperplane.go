@@ -26,15 +26,16 @@ func Within(a HP, b HP) bool   { return hyperplane.Within(hyperplane.HP(a), hype
 // Line returns the line of bisection representing the hyperplane.
 //
 // By arbitrary convention, points on the "left" of the line are infeasible in
-// the hyperplane, so we orient the line direction vector π / 2 clockwise to N.
+// the hyperplane, so we orient the line direction vector π / 2
+// counter-clockwise to N.
 //
 // N.B.: RVO2 defines the "right" side of the line as non-permissible, but we
-// have considered an anti-clockwise rotation of D() to N() (e.g. +X to +Y) to
+// have considered a counter-clockwise rotation of N() to D() (e.g. +X to +Y) to
 // be more natural. See
 // https://github.com/snape/RVO2/blob/57098835aa27dda6d00c43fc0800f621724884cc/src/Agent.cpp#L314
 // for evidence of this distinction.
 func Line(hp HP) line.L {
-	d := *v2d.New(hp.N().Y(), -hp.N().X())
+	d := *v2d.New(-hp.N().Y(), hp.N().X())
 
 	return *line.New(hp.P(), d)
 }
