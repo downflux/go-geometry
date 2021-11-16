@@ -1,2 +1,2 @@
-# geometry
+# go-geometry
 DownFlux geometry utility library
