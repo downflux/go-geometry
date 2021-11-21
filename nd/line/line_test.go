@@ -73,3 +73,72 @@ func TestT(t *testing.T) {
 		})
 	}
 }
+
+func TestParallel(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		l    L
+		m    L
+		want bool
+	}{
+		{
+			name: "Parallel",
+			l: *New(
+				*vector.New(0, 1, 1),
+				*vector.New(1, 0, 0),
+			),
+			m: *New(
+				*vector.New(0, 0, 1),
+				*vector.New(5, 0, 0),
+			),
+			want: true,
+		},
+
+		{
+			name: "AntiParallel",
+			l: *New(
+				*vector.New(0, 1, 1),
+				*vector.New(1, 0, 0),
+			),
+			m: *New(
+				*vector.New(0, 0, 1),
+				*vector.New(-5, 0, 0),
+			),
+			want: false,
+		},
+
+		{
+			name: "Intersecting",
+			l: *New(
+				*vector.New(0, 0, 0),
+				*vector.New(1, 0, 0),
+			),
+			m: *New(
+				*vector.New(0, 0, 0),
+				*vector.New(0, 1, 0),
+			),
+			want: false,
+		},
+
+		{
+			name: "Skew",
+			l: *New(
+				*vector.New(0, 0, 0),
+				*vector.New(1, 0, 0),
+			),
+			m: *New(
+				*vector.New(0, 0, 1),
+				*vector.New(0, 1, 0),
+			),
+			want: false,
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := c.l.Parallel(c.m); got != c.want {
+				t.Errorf("Parallel() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}

@@ -2,6 +2,7 @@
 package line
 
 import (
+	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
@@ -28,4 +29,18 @@ func (l L) L(t float64) vector.V { return vector.Add(l.p, vector.Scale(t, l.d)) 
 // closest to v.
 func (l L) T(v vector.V) float64 {
 	return vector.Dot(l.D(), vector.Sub(v, l.P()))
+}
+
+// Parallel checks if two lines are parallel. A return value of false may
+// indicate the lines intersect, are skew lines, or are anti-parallel.
+//
+// We check for the parallel property by examining the ratio of the vector
+// directions.
+//
+// See https://stackoverflow.com/a/45181059/873865 for more details.
+func (l L) Parallel(m L) bool {
+	return epsilon.Within(
+		vector.Dot(l.D(), m.D()),
+		vector.Magnitude(l.D())*vector.Magnitude(m.D()),
+	)
 }
