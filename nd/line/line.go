@@ -27,8 +27,18 @@ func (l L) L(t float64) vector.V { return vector.Add(l.p, vector.Scale(t, l.d)) 
 
 // T calculates the projected t-value of v onto l by finding the point on L
 // closest to v.
+//
+// Intuitively, we want to find the magnitude of the projected leg onto L; that
+// is, we care about
+//
+//   ||v - P||
+//
+// Therefore, we need a factor of ||D|| in the denominator.
+//
+// Furthermore, we know that t grows linearly with ||D||, so we need to add
+// another ||D|| factor in the denominator as a normalization factor.
 func (l L) T(v vector.V) float64 {
-	return vector.Dot(l.D(), vector.Sub(v, l.P()))
+	return vector.Dot(l.D(), vector.Sub(v, l.P())) / vector.SquaredMagnitude(l.D())
 }
 
 // Parallel checks if two lines are parallel. A return value of false may
