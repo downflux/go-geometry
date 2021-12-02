@@ -188,7 +188,56 @@ func TestT(t *testing.T) {
 	}
 }
 
-func TestIntersection(t *testing.T) {
+func TestN(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		l    L
+		want vector.V
+	}{
+		{
+			name: "Vertical/Positive",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(0, 1),
+			),
+			want: *vector.New(1, 0),
+		},
+		{
+			name: "Vertical/Negative",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(0, -1),
+			),
+			want: *vector.New(-1, 0),
+		},
+		{
+			name: "Horizontal/Positive",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(1, 0),
+			),
+			want: *vector.New(0, -1),
+		},
+		{
+			name: "Horizontal/Negative",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(-1, 0),
+			),
+			want: *vector.New(0, 1),
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := c.l.N(); !vector.Within(got, c.want) {
+				t.Errorf("N() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}
+
+func TestIntersect(t *testing.T) {
 	testConfigs := []struct {
 		name    string
 		l       L
@@ -243,7 +292,7 @@ func TestIntersection(t *testing.T) {
 	}
 }
 
-func TestIntersectionCircle(t *testing.T) {
+func TestIntersectCircle(t *testing.T) {
 	testConfigs := []struct {
 		name    string
 		l       L
