@@ -89,11 +89,12 @@ func Scale(c float64, v V) V {
 }
 
 func Within(v V, u V) bool {
-	delta := 0.0
 	for i := D(0); i < v.Dimension(); i++ {
-		delta += (u.X(i) - v.X(i)) * (u.X(i) - v.X(i))
+		if !epsilon.Within(u.X(i), v.X(i)) {
+			return false
+		}
 	}
-	return epsilon.Within(delta, 0)
+	return true
 }
 
 func IsOrthogonal(v V, u V) bool { return Dot(v, u) == 0 }
