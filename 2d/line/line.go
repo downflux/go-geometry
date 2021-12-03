@@ -25,6 +25,14 @@ func (l L) L(t float64) v2d.V { return v2d.V(line.L(l).L(t)) }
 func (l L) T(v v2d.V) float64 { return line.L(l).T(vector.V(v)) }
 func (l L) Parallel(m L) bool { return line.L(l).Parallel(line.L(m)) }
 
+// We are defining a line normal which is consistent with our 2D hyperplane
+// definition -- that is, if this line is a 2D hyperplane, the normal points
+// into the feasible region.
+//
+// We define the normal as a clockwise π / 2 rotation of the directional
+// vector.
+func (l L) N() v2d.V { return *v2d.New(l.D().Y(), -l.D().X()) }
+
 // Intersect returns the intersection point between two lines.
 //
 // Returns error if the lines are parallel.

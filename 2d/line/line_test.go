@@ -156,6 +156,27 @@ func TestT(t *testing.T) {
 			v:    *vector.New(0, 0),
 			want: 0,
 		},
+
+		// Test based on specific potential bug.
+		//
+		// The intersection between the two contraints
+		//
+		//   x <= 5 and
+		//   x + 4y <= 16
+		//
+		// Should occur at (5, 2.75). This corresponds to
+		//
+		//   t = -1.25
+		//
+		// for the line
+		//
+		//   L = (0, 4) + t(-4, -1)
+		{
+			name: "LPConstraint",
+			l:    *New(*vector.New(0, 4), *vector.New(-4, 1)),
+			v:    *vector.New(5, 2.75),
+			want: -1.25,
+		},
 	}
 
 	for _, c := range testConfigs {
@@ -167,7 +188,56 @@ func TestT(t *testing.T) {
 	}
 }
 
-func TestIntersection(t *testing.T) {
+func TestN(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		l    L
+		want vector.V
+	}{
+		{
+			name: "Vertical/Positive",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(0, 1),
+			),
+			want: *vector.New(1, 0),
+		},
+		{
+			name: "Vertical/Negative",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(0, -1),
+			),
+			want: *vector.New(-1, 0),
+		},
+		{
+			name: "Horizontal/Positive",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(1, 0),
+			),
+			want: *vector.New(0, -1),
+		},
+		{
+			name: "Horizontal/Negative",
+			l: *New(
+				*vector.New(1, 2),
+				*vector.New(-1, 0),
+			),
+			want: *vector.New(0, 1),
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := c.l.N(); !vector.Within(got, c.want) {
+				t.Errorf("N() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}
+
+func TestIntersect(t *testing.T) {
 	testConfigs := []struct {
 		name    string
 		l       L
@@ -189,6 +259,28 @@ func TestIntersection(t *testing.T) {
 			success: true,
 			want:    *vector.New(1, 0),
 		},
+
+		// Test based on specific potential bug.
+		//
+		// The intersection between the two contraints
+		//
+		//   x <= 5 and
+		//   x + 4y <= 16
+		//
+		// Should occur at (5, 2.75).
+		//
+		// N.B.: Lines are defined by
+		//
+		//   L = P + tD
+		//
+		// notation, not by the Hesse-normal planar form.
+		{
+			name:    "LPConstraint",
+			l:       *New(*vector.New(0, 4), *vector.New(-4, 1)),
+			m:       *New(*vector.New(5, 0), *vector.New(0, 5)),
+			success: true,
+			want:    *vector.New(5, 2.75),
+		},
 	}
 
 	for _, c := range testConfigs {
@@ -200,7 +292,7 @@ func TestIntersection(t *testing.T) {
 	}
 }
 
-func TestIntersectionCircle(t *testing.T) {
+func TestIntersectCircle(t *testing.T) {
 	testConfigs := []struct {
 		name    string
 		l       L
