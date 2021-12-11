@@ -44,17 +44,31 @@ func (r R) In(v vector.V) bool {
 }
 
 func (r R) Intersect(s R) (R, bool) {
-	min := make([]float64, r.Min().Dimension())
-	max := make([]float64, r.Min().Dimension())
+	b := New(
+		vector.V(make([]float64, r.Min().Dimension())),
+		vector.V(make([]float64, r.Min().Dimension())),
+	)
 
+	if ok := r.IntersectBuf(s, b); ok {
+		return *b, ok
+	}
+	return R{}, false
+}
+
+// IntersectBuf calculates the rectangle of intersection between two rectangles
+// and writes to a rectangle buffer.
+//
+// N.B.: The buffer min and max properties must match the dimensions of the
+// input rectangles.
+func (r R) IntersectBuf(s R, b *R) bool {
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		min[i] = math.Max(r.Min().X(i), s.Min().X(i))
-		max[i] = math.Min(r.Max().X(i), s.Max().X(i))
+		b.Min()[i] = math.Max(r.Min().X(i), s.Min().X(i))
+		b.Max()[i] = math.Min(r.Max().X(i), s.Max().X(i))
 
-		if min[i] > max[i] {
-			return R{}, false
+		if b.Min()[i] > b.Max()[i] {
+			return false
 		}
 	}
 
-	return *New(*vector.New(min...), *vector.New(max...)), true
+	return true
 }
