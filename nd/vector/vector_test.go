@@ -2,8 +2,24 @@ package vector
 
 import (
 	"math"
+	"math/rand"
 	"testing"
 )
+
+const (
+	dimension = 100
+	min       = -1e10
+	max       = 1e10
+)
+
+func rn(min float64, max float64) float64 { return rand.Float64()*(max-min) + min }
+func rv(min float64, max float64, d D) V {
+	v := V(make([]float64, d))
+	for i := D(0); i < v.Dimension(); i++ {
+		v[i] = rn(min, max)
+	}
+	return v
+}
 
 func TestAdd(t *testing.T) {
 	v := *New(1, 2)
@@ -33,6 +49,58 @@ func TestScale(t *testing.T) {
 	if got := Scale(c, v); !Within(got, want) {
 		t.Errorf("Scale() = %v, want = %v", got, want)
 	}
+}
+
+func BenchmarkScale(b *testing.B) {
+	b.Run("Unbuffered", func(b *testing.B) {
+		v := rv(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			Scale(rn(min, max), v)
+		}
+	})
+	b.Run("Buffered", func(b *testing.B) {
+		v := rv(min, max, dimension)
+		buf := V(make([]float64, dimension))
+		for i := 0; i < b.N; i++ {
+			ScaleBuf(rn(min, max), v, buf)
+		}
+	})
+}
+
+func BenchmarkAdd(b *testing.B) {
+	b.Run("Unbuffered", func(b *testing.B) {
+		v := rv(min, max, dimension)
+		u := rv(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			Add(v, u)
+		}
+	})
+	b.Run("Buffered", func(b *testing.B) {
+		v := rv(min, max, dimension)
+		u := rv(min, max, dimension)
+		buf := V(make([]float64, dimension))
+		for i := 0; i < b.N; i++ {
+			AddBuf(v, u, buf)
+		}
+	})
+}
+
+func BenchmarkSub(b *testing.B) {
+	b.Run("Unbuffered", func(b *testing.B) {
+		v := rv(min, max, dimension)
+		u := rv(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			Sub(v, u)
+		}
+	})
+	b.Run("Buffered", func(b *testing.B) {
+		v := rv(min, max, dimension)
+		u := rv(min, max, dimension)
+		buf := V(make([]float64, dimension))
+		for i := 0; i < b.N; i++ {
+			SubBuf(v, u, buf)
+		}
+	})
 }
 
 func TestDot(t *testing.T) {
