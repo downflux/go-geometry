@@ -43,7 +43,9 @@ func (v V) X(i D) float64 {
 
 func SquaredMagnitude(v V) float64 { return Dot(v, v) }
 func Magnitude(v V) float64        { return math.Sqrt(SquaredMagnitude(v)) }
-func Unit(v V) V                   { return Scale(1/Magnitude(v), v) }
+
+func Unit(v V) V       { return Scale(1/Magnitude(v), v) }
+func UnitBuf(v V, b V) { ScaleBuf(1/Magnitude(v), v, b) }
 
 func Dot(v V, u V) float64 {
 	r := 0.0
@@ -51,7 +53,7 @@ func Dot(v V, u V) float64 {
 		panic("mismatching vector dimensions")
 	}
 	for i := D(0); i < v.Dimension(); i++ {
-		r += v.X(i) * u.X(i)
+		r += v[i] * u[i]
 	}
 	return r
 }
@@ -61,11 +63,19 @@ func Add(v V, u V) V {
 		panic("mismatching vector dimensions")
 	}
 
-	xs := make([]float64, v.Dimension())
-	for i := D(0); i < v.Dimension(); i++ {
-		xs[i] = v.X(i) + u.X(i)
+	b := V(make([]float64, v.Dimension()))
+	AddBuf(v, u, b)
+	return b
+}
+
+func AddBuf(v V, u V, b V) {
+	if (v.Dimension() != u.Dimension()) || (v.Dimension() != b.Dimension()) {
+		panic("mismatching vector dimensions")
 	}
-	return V(xs)
+
+	for i := D(0); i < v.Dimension(); i++ {
+		b[i] = v[i] + u[i]
+	}
 }
 
 func Sub(v V, u V) V {
@@ -73,24 +83,40 @@ func Sub(v V, u V) V {
 		panic("mismatching vector dimensions")
 	}
 
-	xs := make([]float64, v.Dimension())
-	for i := D(0); i < v.Dimension(); i++ {
-		xs[i] = v.X(i) - u.X(i)
+	b := V(make([]float64, v.Dimension()))
+	SubBuf(v, u, b)
+	return b
+}
+
+func SubBuf(v V, u V, b V) {
+	if (v.Dimension() != u.Dimension()) || (v.Dimension() != b.Dimension()) {
+		panic("mismatching vector dimensions")
 	}
-	return V(xs)
+
+	for i := D(0); i < v.Dimension(); i++ {
+		b[i] = v[i] - u[i]
+	}
 }
 
 func Scale(c float64, v V) V {
-	xs := make([]float64, int(v.Dimension()))
-	for i := D(0); i < v.Dimension(); i++ {
-		xs[i] = c * v.X(i)
+	b := V(make([]float64, v.Dimension()))
+	ScaleBuf(c, v, b)
+	return b
+}
+
+func ScaleBuf(c float64, v V, b V) {
+	if v.Dimension() != b.Dimension() {
+		panic("mismatching vector dimensions")
 	}
-	return V(xs)
+
+	for i := D(0); i < v.Dimension(); i++ {
+		b[i] = c * v[i]
+	}
 }
 
 func Within(v V, u V) bool {
 	for i := D(0); i < v.Dimension(); i++ {
-		if !epsilon.Within(u.X(i), v.X(i)) {
+		if !epsilon.Within(u[i], v[i]) {
 			return false
 		}
 	}

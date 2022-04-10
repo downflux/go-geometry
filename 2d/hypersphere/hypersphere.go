@@ -16,9 +16,7 @@ func New(p v2d.V, r float64) *C {
 	return &c
 }
 
-func (c C) R() float64 { return hypersphere.C(c).R() }
-func (c C) P() v2d.V   { return v2d.V(hypersphere.C(c).P()) }
-func (c C) In(p v2d.V) bool {
-	return v2d.SquaredMagnitude(v2d.Sub(p, c.P())) <= c.R()*c.R()
-}
-func Within(c C, d C) bool { return hypersphere.Within(hypersphere.C(c), hypersphere.C(d)) }
+func (c C) R() float64      { return hypersphere.C(c).R() }
+func (c C) P() v2d.V        { return v2d.V(hypersphere.C(c).P()) }
+func (c C) In(p v2d.V) bool { return hypersphere.C(c).In(vector.V(p)) }
+func Within(c C, d C) bool  { return hypersphere.Within(hypersphere.C(c), hypersphere.C(d)) }
