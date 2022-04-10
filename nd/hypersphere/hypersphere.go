@@ -2,6 +2,7 @@
 package hypersphere
 
 import (
+	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
@@ -19,4 +20,8 @@ func (c C) P() vector.V { return c.p }
 
 func (c C) In(p vector.V) bool {
 	return vector.SquaredMagnitude(vector.Sub(p, c.P())) <= c.r*c.r
+}
+
+func Within(c C, d C) bool {
+	return vector.Within(c.P(), d.P()) && epsilon.Within(c.R(), d.R())
 }
