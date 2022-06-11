@@ -132,3 +132,5 @@ func (l L) Distance(p v2d.V) float64 {
 	v := v2d.Sub(p, l.P())
 	return math.Abs(v2d.Determinant(l.D(), v) / v2d.Magnitude(l.D()))
 }
+
+func Within(l L, m L) bool { return line.Within(line.L(l), line.L(m)) }

@@ -54,3 +54,5 @@ func (l L) Parallel(m L) bool {
 		vector.Magnitude(l.D())*vector.Magnitude(m.D()),
 	)
 }
+
+func Within(l L, m L) bool { return vector.Within(l.D(), m.D()) && vector.Within(l.P(), m.P()) }
