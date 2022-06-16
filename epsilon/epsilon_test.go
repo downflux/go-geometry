@@ -39,9 +39,27 @@ func TestWithin(t *testing.T) {
 			want: true,
 		},
 		{
+			name: "Finite/Equal/NextAfter",
+			a:    1.1,
+			b:    math.Nextafter(1.1, 2),
+			want: true,
+		},
+		{
+			name: "Finite/Equal/NextAfter/Reversed",
+			a:    1.1,
+			b:    math.Nextafter(1.1, 0),
+			want: true,
+		},
+		{
 			name: "Finite/NotEqual",
 			a:    1.2,
 			b:    1.1,
+			want: false,
+		},
+		{
+			name: "Finite/NotEqual/Reversed",
+			a:    1.1,
+			b:    1.2,
 			want: false,
 		},
 	}
