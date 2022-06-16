@@ -55,4 +55,8 @@ func (l L) Parallel(m L) bool {
 	)
 }
 
-func Within(l L, m L) bool { return vector.Within(l.D(), m.D()) && vector.Within(l.P(), m.P()) }
+func WithinEpsilon(l L, m L, e epsilon.E) bool {
+	return vector.WithinEpsilon(l.D(), m.D(), e) && vector.WithinEpsilon(l.P(), m.P(), e)
+}
+
+func Within(l L, m L) bool { return WithinEpsilon(l, m, epsilon.DefaultE) }

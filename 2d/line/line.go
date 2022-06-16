@@ -133,4 +133,5 @@ func (l L) Distance(p v2d.V) float64 {
 	return math.Abs(v2d.Determinant(l.D(), v) / v2d.Magnitude(l.D()))
 }
 
-func Within(l L, m L) bool { return line.Within(line.L(l), line.L(m)) }
+func WithinEpsilon(l L, m L, e epsilon.E) bool { return line.WithinEpsilon(line.L(l), line.L(m), e) }
+func Within(l L, m L) bool                     { return line.Within(line.L(l), line.L(m)) }

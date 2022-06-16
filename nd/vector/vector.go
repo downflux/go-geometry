@@ -49,9 +49,6 @@ func UnitBuf(v V, b V) { ScaleBuf(1/Magnitude(v), v, b) }
 
 func Dot(v V, u V) float64 {
 	r := 0.0
-	if v.Dimension() != u.Dimension() {
-		panic("mismatching vector dimensions")
-	}
 	for i := D(0); i < v.Dimension(); i++ {
 		r += v[i] * u[i]
 	}
@@ -114,13 +111,14 @@ func ScaleBuf(c float64, v V, b V) {
 	}
 }
 
-func Within(v V, u V) bool {
+func WithinEpsilon(v V, u V, e epsilon.E) bool {
 	for i := D(0); i < v.Dimension(); i++ {
-		if !epsilon.Within(u[i], v[i]) {
+		if !e.Within(u[i], v[i]) {
 			return false
 		}
 	}
 	return true
 }
 
+func Within(v V, u V) bool       { return WithinEpsilon(v, u, epsilon.DefaultE) }
 func IsOrthogonal(v V, u V) bool { return Dot(v, u) == 0 }

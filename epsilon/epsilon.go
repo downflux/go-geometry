@@ -12,21 +12,19 @@ var (
 	// for more information.
 	minNormal = math.Float64frombits(1 << 52) // 0x0010000000000000
 
-	DefaultE = New(
+	DefaultE = *New(
 		func(a float64, b float64) float64 {
 			return 128 * math.Abs(a-math.Nextafter(a, b))
 		},
 	)
 )
 
-type EpsilonT func(a, b float64) float64
+type f func(a, b float64) float64
+type E f
 
-type E struct {
-	epsilon EpsilonT
-}
-
-func New(epsilon EpsilonT) *E {
-	return &E{epsilon: epsilon}
+func New(epsilon f) *E {
+	e := E(epsilon)
+	return &e
 }
 
 // Within calculates if two float64 values are very close to one another. This
@@ -39,7 +37,7 @@ func (e E) Within(a float64, b float64) bool {
 	}
 
 	normal := math.Min(math.Abs(a)+math.Abs(b), math.MaxFloat64)
-	return math.Abs(a-b) < math.Max(minNormal, e.epsilon(a, b)*normal)
+	return math.Abs(a-b) < math.Max(minNormal, f(e)(a, b)*normal)
 }
 
 func Within(a float64, b float64) bool { return DefaultE.Within(a, b) }

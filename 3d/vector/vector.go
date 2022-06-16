@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
@@ -34,6 +35,9 @@ func SubBuf(v V, u V, b V)         { vector.SubBuf(vector.V(v), vector.V(u), vec
 func Dot(v V, u V) float64         { return vector.Dot(vector.V(v), vector.V(u)) }
 func Scale(c float64, v V) V       { return V(vector.Scale(c, vector.V(v))) }
 func ScaleBuf(c float64, v V, b V) { vector.ScaleBuf(c, vector.V(v), vector.V(b)) }
+func WithinEpsilon(v V, u V, e epsilon.E) bool {
+	return vector.WithinEpsilon(vector.V(v), vector.V(u), e)
+}
 func Within(v V, u V) bool         { return vector.Within(vector.V(v), vector.V(u)) }
 func SquaredMagnitude(v V) float64 { return vector.SquaredMagnitude(vector.V(v)) }
 func Magnitude(v V) float64        { return vector.Magnitude(vector.V(v)) }

@@ -8,6 +8,7 @@ package hyperplane
 import (
 	"fmt"
 
+	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
@@ -73,6 +74,8 @@ func Disjoint(a HP, b HP) bool {
 	return vector.Within(a.N(), vector.Scale(-1, b.N())) && !a.In(vector.Sub(b.P(), a.P()))
 }
 
-func Within(a HP, b HP) bool {
-	return vector.Within(a.N(), b.N()) && vector.Within(a.P(), b.P())
+func WithinEpsilon(a HP, b HP, e epsilon.E) bool {
+	return vector.WithinEpsilon(a.N(), b.N(), e) && vector.WithinEpsilon(a.P(), b.P(), e)
 }
+
+func Within(a HP, b HP) bool { return WithinEpsilon(a, b, epsilon.DefaultE) }

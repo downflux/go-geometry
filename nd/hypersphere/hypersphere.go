@@ -26,6 +26,8 @@ func (c C) In(p vector.V) bool {
 	return m < r || epsilon.Within(m, r)
 }
 
-func Within(c C, d C) bool {
-	return vector.Within(c.P(), d.P()) && epsilon.Within(c.R(), d.R())
+func WithinEpsilon(c C, d C, e epsilon.E) bool {
+	return vector.WithinEpsilon(c.P(), d.P(), e) && e.Within(c.R(), d.R())
 }
+
+func Within(c C, d C) bool { return WithinEpsilon(c, d, epsilon.DefaultE) }

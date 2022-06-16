@@ -50,7 +50,7 @@ func TestRotate(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got := Rotate(c.theta, c.v); !Within(got, c.want) {
+			if got := Rotate(c.theta, c.v); !WithinEpsilon(got, c.want, func(a, b float64) float64 { return 10 }) {
 				t.Errorf("Rotate() = %v, want = %v", got, c.want)
 			}
 		})
