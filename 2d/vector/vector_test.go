@@ -3,6 +3,8 @@ package vector
 import (
 	"math"
 	"testing"
+
+	"github.com/downflux/go-geometry/epsilon"
 )
 
 func TestDeterminant(t *testing.T) {
@@ -50,7 +52,7 @@ func TestRotate(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			if got := Rotate(c.theta, c.v); !WithinEpsilon(got, c.want, func(a, b float64) float64 { return 10 }) {
+			if got := Rotate(c.theta, c.v); !WithinEpsilon(got, c.want, epsilon.Absolute(1e-5)) {
 				t.Errorf("Rotate() = %v, want = %v", got, c.want)
 			}
 		})
