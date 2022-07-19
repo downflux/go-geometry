@@ -100,23 +100,15 @@ func (l L) Intersect(m L) (v2d.V, bool) {
 //
 // See https://stackoverflow.com/a/1084899 for more information.
 func (l L) IntersectCircle(c hypersphere.C) (v2d.V, v2d.V, bool) {
-	p := v2d.Sub(l.P(), c.P())
-
-	dot := v2d.Dot(p, l.D())
-	discriminant := dot*dot + c.R()*c.R() - v2d.SquaredMagnitude(p)
-
-	// The line does not intersect the circle.
-	if discriminant < 0 {
+	d := l.Distance(c.P())
+	if d > c.R() {
 		return v2d.V{}, v2d.V{}, false
 	}
 
-	// Find two intersections between line and circle. This is equivalent to
-	// having two additional constraints which lie tangent to the circle at
-	// these two points.
-	tl := -dot - math.Sqrt(discriminant)
-	tr := -dot + math.Sqrt(discriminant)
+	t := l.T(c.P())
 
-	return l.L(tl), l.L(tr), true
+	discrimanant := (c.R()*c.R() - d*d) / v2d.SquaredMagnitude(l.D())
+	return l.L(t - math.Sqrt(discrimanant)), l.L(t + math.Sqrt(discrimanant)), true
 }
 
 // Distance finds the distance between the line l and a point p.

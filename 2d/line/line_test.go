@@ -311,6 +311,26 @@ func TestIntersectCircle(t *testing.T) {
 			},
 		},
 		{
+			name:    "OriginIntersection/Orientation",
+			l:       *New(*vector.New(0, 0), *vector.New(-2.5, 0)),
+			c:       *hypersphere.New(*vector.New(0, 0), 1),
+			success: true,
+			want: []vector.V{
+				*vector.New(1, 0),
+				*vector.New(-1, 0),
+			},
+		},
+		{
+			name:    "OriginIntersection/ScaleDInvariant",
+			l:       *New(*vector.New(0, 0), *vector.New(2.5, 0)),
+			c:       *hypersphere.New(*vector.New(0, 0), 1),
+			success: true,
+			want: []vector.V{
+				*vector.New(-1, 0),
+				*vector.New(1, 0),
+			},
+		},
+		{
 			name:    "SimpleNoIntersection",
 			l:       *New(*vector.New(0, 0), *vector.New(1, 0)),
 			c:       *hypersphere.New(*vector.New(0, 2), 1),
