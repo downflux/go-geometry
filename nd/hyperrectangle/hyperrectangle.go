@@ -13,21 +13,20 @@ type R struct {
 	max vector.V
 }
 
-func New(v vector.V, u vector.V) *R {
-	if v.Dimension() != u.Dimension() {
+func New(min vector.V, max vector.V) *R {
+	if min.Dimension() != max.Dimension() {
 		panic("cannot construct a hyperrectangle with mismatching input vector dimensions")
 	}
-	min := make([]float64, v.Dimension())
-	max := make([]float64, v.Dimension())
 
-	for i := vector.D(0); i < v.Dimension(); i++ {
-		min[i] = math.Min(v.X(i), u.X(i))
-		max[i] = math.Max(v.X(i), u.X(i))
+	for i := vector.D(0); i < min.Dimension(); i++ {
+		if min[i] > max[i] {
+			panic("cannot construct a hyperrectangle with invalid min and max vectors")
+		}
 	}
 
 	return &R{
-		min: *vector.New(min...),
-		max: *vector.New(max...),
+		min: min,
+		max: max,
 	}
 }
 
