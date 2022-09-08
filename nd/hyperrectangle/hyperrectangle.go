@@ -71,3 +71,34 @@ func (r R) IntersectBuf(s R, b *R) bool {
 
 	return true
 }
+
+func V(r R) float64 {
+	v := 1.0
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		v *= r.Max().X(i) - r.Min().X(i)
+	}
+	return v
+}
+
+// SA returns the "surface area" of an N-dimensional interval. For N = 2, this
+// is the perimeter, and for N = 3, this is the total surface area of the
+// rectangular prism.
+func SA(r R) float64 {
+	k := r.Min().Dimension()
+	if k == 1 {
+		return 0
+	}
+
+	var sa float64
+	min := make([]float64, k-1)
+	max := make([]float64, k-1)
+	for i := vector.D(0); i < k; i++ {
+		copy(min, r.Min()[:i])
+		copy(min[i:], r.Min()[i+1:])
+		copy(max, r.Max()[:i])
+		copy(max[i:], r.Max()[i+1:])
+
+		sa += V(*New(min, max))
+	}
+	return 2 * sa
+}

@@ -3,6 +3,7 @@ package hyperrectangle
 import (
 	"testing"
 
+	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 	"github.com/google/go-cmp/cmp"
 )
@@ -151,6 +152,80 @@ func TestIntersection(t *testing.T) {
 				),
 			); diff != "" {
 				t.Errorf("Intersect() mismatch (-want +got):\n%v", diff)
+			}
+		})
+	}
+}
+
+func TestV(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		r    R
+		want float64
+	}{
+		{
+			name: "1D",
+			r: *New(
+				*vector.New(1),
+				*vector.New(100),
+			),
+			want: 99,
+		},
+		{
+			name: "2D",
+			r: *New(
+				*vector.New(1, 1),
+				*vector.New(100, 100),
+			),
+			want: 99 * 99,
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := V(c.r); !epsilon.Within(c.want, got) {
+				t.Errorf("V() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}
+
+func TestSA(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		r    R
+		want float64
+	}{
+		{
+			name: "1D",
+			r: *New(
+				*vector.New(1),
+				*vector.New(100),
+			),
+			want: 0,
+		},
+		{
+			name: "2D",
+			r: *New(
+				*vector.New(0, 0),
+				*vector.New(99, 101),
+			),
+			want: 400,
+		},
+		{
+			name: "3D",
+			r: *New(
+				*vector.New(0, 0, 0),
+				*vector.New(9, 10, 11),
+			),
+			want: 598,
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := SA(c.r); !epsilon.Within(c.want, got) {
+				t.Errorf("SA() = %v, want = %v", got, c.want)
 			}
 		})
 	}
