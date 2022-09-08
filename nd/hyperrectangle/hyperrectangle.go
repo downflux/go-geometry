@@ -71,3 +71,11 @@ func (r R) IntersectBuf(s R, b *R) bool {
 
 	return true
 }
+
+func V(r R) float64 {
+	v := 1.0
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		v *= r.Max().X(i) - r.Min().X(i)
+	}
+	return v
+}
