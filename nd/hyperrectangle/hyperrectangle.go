@@ -5,6 +5,7 @@ package hyperrectangle
 import (
 	"math"
 
+	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
@@ -102,3 +103,9 @@ func SA(r R) float64 {
 	}
 	return 2 * sa
 }
+
+func WithinEpsilon(g R, h R, e epsilon.E) bool {
+	return vector.WithinEpsilon(g.Min(), h.Min(), e) && vector.WithinEpsilon(g.Max(), h.Max(), e)
+}
+
+func Within(g R, h R) bool { return WithinEpsilon(g, h, epsilon.DefaultE) }
