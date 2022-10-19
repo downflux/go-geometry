@@ -60,9 +60,8 @@ func BenchmarkScale(b *testing.B) {
 	})
 	b.Run("Buffered", func(b *testing.B) {
 		v := rv(min, max, dimension)
-		buf := V(make([]float64, dimension))
 		for i := 0; i < b.N; i++ {
-			ScaleBuf(rn(min, max), v, buf)
+			v.M().Scale(rn(min, max))
 		}
 	})
 }
@@ -78,9 +77,8 @@ func BenchmarkAdd(b *testing.B) {
 	b.Run("Buffered", func(b *testing.B) {
 		v := rv(min, max, dimension)
 		u := rv(min, max, dimension)
-		buf := V(make([]float64, dimension))
 		for i := 0; i < b.N; i++ {
-			AddBuf(v, u, buf)
+			v.M().Add(u)
 		}
 	})
 }
@@ -96,9 +94,8 @@ func BenchmarkSub(b *testing.B) {
 	b.Run("Buffered", func(b *testing.B) {
 		v := rv(min, max, dimension)
 		u := rv(min, max, dimension)
-		buf := V(make([]float64, dimension))
 		for i := 0; i < b.N; i++ {
-			SubBuf(v, u, buf)
+			v.M().Add(u)
 		}
 	})
 }
