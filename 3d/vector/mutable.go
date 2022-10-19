@@ -1,0 +1,31 @@
+package vector
+
+import (
+	"github.com/downflux/go-geometry/nd/vector"
+)
+
+type M vector.M
+
+func (v M) Copy(u V)        { vector.M(v).Copy(vector.V(u)) }
+func (v M) Zero()           { vector.M(v).Zero() }
+func (v M) V() V            { return V(v) }
+func (v M) X() float64      { return v[vector.AXIS_X] }
+func (v M) SetX(c float64)  { v[vector.AXIS_X] = c }
+func (v M) Y() float64      { return v[vector.AXIS_Y] }
+func (v M) SetY(c float64)  { v[vector.AXIS_Y] = c }
+func (v M) Z() float64      { return v[vector.AXIS_Z] }
+func (v M) SetZ(c float64)  { v[vector.AXIS_Z] = c }
+func (v M) Add(u V)         { vector.M(v).Add(vector.V(u)) }
+func (v M) Sub(u V)         { vector.M(v).Sub(vector.V(u)) }
+func (v M) Scale(c float64) { vector.M(v).Scale(c) }
+func (v M) Unit()           { vector.M(v).Unit() }
+
+func (v M) Cross(u V) {
+	x := v[vector.AXIS_X]
+	y := v[vector.AXIS_Y]
+	z := v[vector.AXIS_Z]
+
+	v[vector.AXIS_X] = y*u[vector.AXIS_Z] - z*u[vector.AXIS_Y]
+	v[vector.AXIS_Y] = z*u[vector.AXIS_X] - x*u[vector.AXIS_Z]
+	v[vector.AXIS_Z] = x*u[vector.AXIS_Y] - y*u[vector.AXIS_X]
+}

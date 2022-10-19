@@ -21,7 +21,8 @@ func Determinant(v V, u V) float64 {
 
 // Rotate rotates the vector counterclockwise by the input angle.
 func Rotate(theta float64, v V) V {
-	b := M{v[vector.AXIS_X], v[vector.AXIS_Y]}
+	b := M(make([]float64, len(v)))
+	b.Copy(v)
 	b.Rotate(theta)
 	return b.V()
 }
