@@ -2,6 +2,8 @@
 package hypersphere
 
 import (
+	"math"
+
 	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
@@ -15,7 +17,7 @@ func New(p vector.V, r float64) *C {
 	return &C{r: r, p: p}
 }
 
-func (c C) R() float64  { return c.r }
+func (c C) R() float64  { return math.Abs(c.r) }
 func (c C) P() vector.V { return c.p }
 
 func (c C) In(p vector.V) bool {
