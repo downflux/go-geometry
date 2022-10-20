@@ -64,6 +64,34 @@ func Union(r R, s R) R {
 	return b.R()
 }
 
+// Contains checks if the input rectangle r fully encloses s. r is a closed
+// interval.
+func Contains(r R, s R) bool {
+	if r.Min().Dimension() != s.Min().Dimension() {
+		panic("mismatching vector dimensions")
+	}
+
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		if s.Min().X(i) < r.Min().X(i) || s.Max().X(i) > r.Max().X(i) {
+			return false
+		}
+	}
+	return true
+}
+
+func Disjoint(r R, s R) bool {
+	if r.Min().Dimension() != s.Min().Dimension() {
+		panic("mismatching vector dimensions")
+	}
+
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		if (r.Min().X(i) < s.Min().X(i) && r.Max().X(i) < s.Min().X(i)) || (s.Min().X(i) < r.Min().X(i) && s.Max().X(i) < r.Min().X(i)) {
+			return true
+		}
+	}
+	return false
+}
+
 func V(r R) float64 {
 	v := 1.0
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {

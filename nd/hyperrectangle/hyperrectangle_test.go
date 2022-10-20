@@ -8,6 +8,84 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+func TestDisjoint(t *testing.T) {
+	type config struct {
+		name string
+		r    R
+		s    R
+		want bool
+	}
+
+	configs := []config{
+		{
+			name: "Simple/Disjoint",
+			r: *New(
+				[]float64{0},
+				[]float64{10},
+			),
+			s: *New(
+				[]float64{11},
+				[]float64{20},
+			),
+			want: true,
+		},
+		{
+			name: "Simple/Overlap",
+			r: *New(
+				[]float64{0},
+				[]float64{10},
+			),
+			s: *New(
+				[]float64{9},
+				[]float64{20},
+			),
+			want: false,
+		},
+		{
+			name: "Simple/Disjoint/Commutative",
+			r: *New(
+				[]float64{11},
+				[]float64{20},
+			),
+			s: *New(
+				[]float64{0},
+				[]float64{10},
+			),
+			want: true,
+		},
+		{
+			name: "2D/Disjoint",
+			r: *New(
+				[]float64{0, 0},
+				[]float64{10, 10},
+			),
+			s: *New(
+				[]float64{5, 11},
+				[]float64{20, 20},
+			),
+			want: true,
+		},
+		{
+			name: "2D/Overlap",
+			r: *New(
+				[]float64{0, 0},
+				[]float64{10, 10},
+			),
+			s: *New(
+				[]float64{5, 5},
+				[]float64{20, 20},
+			),
+			want: false,
+		},
+	}
+
+	for _, c := range configs {
+		if got := Disjoint(c.r, c.s); got != c.want {
+			t.Errorf("Disjoint() = %v, want = %v", got, c.want)
+		}
+	}
+}
+
 func TestUnion(t *testing.T) {
 	testConfigs := []struct {
 		name string

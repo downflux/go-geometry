@@ -12,7 +12,7 @@ import (
 // C defines an N-dimensional linear constraint of the (standard) form embedded
 // in N-dimensional ambient space.
 //
-//   A • X <= B
+//	A • X <= B
 type C constraint.C
 
 func New(p v2d.V, n v2d.V) *C {

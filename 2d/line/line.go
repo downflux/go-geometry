@@ -45,36 +45,36 @@ func (l L) N() v2d.V { return *v2d.New(l.D().Y(), -l.D().X()) }
 //
 // We know the parametric equation form of these lines -- that is,
 //
-//   L = P + tD
-//   M = Q + uE
+//	L = P + tD
+//	M = Q + uE
 //
 // At their intersection, we know that L meets M:
 //
-//   L = M
-//   => P + tD = Q + uE
+//	L = M
+//	=> P + tD = Q + uE
 //
 // We want to find the projection onto L, which means we need to find a concrete
 // value for t. the other parameter u doesn't matter so much -- let's try to get
 // rid of it.
 //
-//   uE = P - Q + tD
+//	uE = P - Q + tD
 //
 // Here, we know P, D, Q, and E are vectors, and we can decompose these into a
 // system of equations by isolating their orthogonal (e.g. horizontal and
 // vertical) components.
 //
-//   uEx = Px - Qx + tDx
-//   uEy = Py - Qy + tDy
+//	uEx = Px - Qx + tDx
+//	uEy = Py - Qy + tDy
 //
 // Solving for u, we get
 //
-//   (Px - Qx + tDx) / Ex = (Py - Qy + tDy) / Ey
-//   => Ey (Px - Qx + tDx) = Ex (Py - Qy + tDy)
+//	(Px - Qx + tDx) / Ex = (Py - Qy + tDy) / Ey
+//	=> Ey (Px - Qx + tDx) = Ex (Py - Qy + tDy)
 //
 // We leave the task of simplifying the above terms as an exercise to the
 // reader. Isolating t, and noting some common substitutions, we get
 //
-//   t = || E x (P - Q) || / || D x E ||
+//	t = || E x (P - Q) || / || D x E ||
 //
 // See https://gamedev.stackexchange.com/a/44733 for more information.
 func (l L) Intersect(m L) (v2d.V, bool) {
@@ -115,7 +115,7 @@ func (l L) IntersectCircle(c hypersphere.C) (v2d.V, v2d.V, bool) {
 //
 // The distance from a line L to a point Q is given by
 //
-//   d := || D x (Q - P) || / || D ||
+//	d := || D x (Q - P) || / || D ||
 //
 // See
 // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Another_vector_formulation
