@@ -1,3 +1,5 @@
+// Package vector defines an n-dimensional vector. The mutable / immutable
+// syntax is based loosely off of the github.com/kvartborg/vector implementation.
 package vector
 
 import (
