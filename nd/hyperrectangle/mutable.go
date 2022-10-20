@@ -23,6 +23,10 @@ func (r M) Zero() {
 }
 
 func (r M) Intersect(s R) bool {
+	if r.Min().Dimension() != s.Min().Dimension() {
+		panic("mismatching vector dimensions")
+	}
+
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
 		r.Min().M().SetX(i, math.Max(r.Min()[i], s.Min()[i]))
 		r.Max().M().SetX(i, math.Min(r.Max()[i], s.Max()[i]))
@@ -33,4 +37,15 @@ func (r M) Intersect(s R) bool {
 	}
 
 	return true
+}
+
+func (r M) Union(s R) {
+	if r.Min().Dimension() != s.Min().Dimension() {
+		panic("mismatching vector dimensions")
+	}
+
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		r.Min().M().SetX(i, math.Min(r.Min()[i], s.Min()[i]))
+		r.Max().M().SetX(i, math.Max(r.Max()[i], s.Max()[i]))
+	}
 }

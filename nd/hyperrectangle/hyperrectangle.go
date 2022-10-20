@@ -29,8 +29,7 @@ func New(min vector.V, max vector.V) *R {
 	}
 }
 
-func (r R) M() M { return M(r) }
-
+func (r R) M() M          { return M(r) }
 func (r R) Min() vector.V { return r.min }
 func (r R) Max() vector.V { return r.max }
 func (r R) D() vector.V   { return vector.Sub(r.Max(), r.Min()) }
@@ -43,7 +42,7 @@ func (r R) In(v vector.V) bool {
 	return success
 }
 
-func (r R) Intersect(s R) (R, bool) {
+func Intersect(r R, s R) (R, bool) {
 	b := M(*New(
 		vector.V(make([]float64, r.Min().Dimension())),
 		vector.V(make([]float64, r.Min().Dimension())),
@@ -53,6 +52,16 @@ func (r R) Intersect(s R) (R, bool) {
 		return b.R(), ok
 	}
 	return R{}, false
+}
+
+func Union(r R, s R) R {
+	b := M(*New(
+		vector.V(make([]float64, r.Min().Dimension())),
+		vector.V(make([]float64, r.Min().Dimension())),
+	))
+	b.Copy(r)
+	b.Union(s)
+	return b.R()
 }
 
 func V(r R) float64 {

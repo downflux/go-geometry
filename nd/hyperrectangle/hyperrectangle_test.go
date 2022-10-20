@@ -8,7 +8,47 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestIntersection(t *testing.T) {
+func TestUnion(t *testing.T) {
+	testConfigs := []struct {
+		name string
+		r    R
+		s    R
+		want R
+	}{
+		{
+			name: "NoExpansion",
+			r: *New(
+				*vector.New(1, 2),
+				*vector.New(2, 3),
+			),
+			s: *New(
+				*vector.New(1, 2),
+				*vector.New(2, 3),
+			),
+			want: *New(
+				*vector.New(1, 2),
+				*vector.New(2, 3),
+			),
+		},
+	}
+
+	for _, c := range testConfigs {
+		t.Run(c.name, func(t *testing.T) {
+			got := Union(c.r, c.s)
+			if diff := cmp.Diff(
+				c.want,
+				got,
+				cmp.AllowUnexported(
+					R{},
+				),
+			); diff != "" {
+				t.Errorf("Union() mismatch (-want +got):\n%v", diff)
+			}
+		})
+	}
+}
+
+func TestIntersect(t *testing.T) {
 	testConfigs := []struct {
 		name        string
 		r           R
@@ -140,7 +180,7 @@ func TestIntersection(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			got, ok := c.r.Intersect(c.s)
+			got, ok := Intersect(c.r, c.s)
 			if ok != c.wantSuccess {
 				t.Errorf("Intersect() = _, %v, want = _, %v", ok, c.wantSuccess)
 			}
