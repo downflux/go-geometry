@@ -10,11 +10,11 @@ import (
 // C defines an N-dimensional linear constraint of the (standard) form embedded
 // in N-dimensional ambient space.
 //
-//   A • X <= B
+//	A • X <= B
 //
 // For two dimensions, this is
 //
-//   a_x * x + a_y * y <= b
+//	a_x * x + a_y * y <= b
 type C hyperplane.HP
 
 func New(p vector.V, n vector.V) *C {

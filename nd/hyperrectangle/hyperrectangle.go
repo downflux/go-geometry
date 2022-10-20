@@ -3,8 +3,6 @@
 package hyperrectangle
 
 import (
-	"math"
-
 	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
@@ -31,6 +29,8 @@ func New(min vector.V, max vector.V) *R {
 	}
 }
 
+func (r R) M() M { return M(r) }
+
 func (r R) Min() vector.V { return r.min }
 func (r R) Max() vector.V { return r.max }
 func (r R) D() vector.V   { return vector.Sub(r.Max(), r.Min()) }
@@ -44,33 +44,15 @@ func (r R) In(v vector.V) bool {
 }
 
 func (r R) Intersect(s R) (R, bool) {
-	b := New(
+	b := M(*New(
 		vector.V(make([]float64, r.Min().Dimension())),
 		vector.V(make([]float64, r.Min().Dimension())),
-	)
-
-	if ok := r.IntersectBuf(s, b); ok {
-		return *b, ok
+	))
+	b.Copy(r)
+	if ok := b.Intersect(s); ok {
+		return b.R(), ok
 	}
 	return R{}, false
-}
-
-// IntersectBuf calculates the rectangle of intersection between two rectangles
-// and writes to a rectangle buffer.
-//
-// N.B.: The buffer min and max properties must match the dimensions of the
-// input rectangles.
-func (r R) IntersectBuf(s R, b *R) bool {
-	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		b.Min()[i] = math.Max(r.Min().X(i), s.Min().X(i))
-		b.Max()[i] = math.Min(r.Max().X(i), s.Max().X(i))
-
-		if b.Min()[i] > b.Max()[i] {
-			return false
-		}
-	}
-
-	return true
 }
 
 func V(r R) float64 {

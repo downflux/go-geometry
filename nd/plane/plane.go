@@ -10,11 +10,11 @@ import (
 
 // P implements a plane of the Hesse normal form
 //
-//   (N • X) / || N || + R = 0
+//	(N • X) / || N || + R = 0
 //
 // where
 //
-//   R = -(N • P) / || N ||
+//	R = -(N • P) / || N ||
 type P struct {
 	n vector.V
 

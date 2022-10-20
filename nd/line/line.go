@@ -8,7 +8,7 @@ import (
 
 // L defines a parametric line of the form
 //
-//   L := P + tD
+//	L := P + tD
 type L struct {
 	p vector.V
 	d vector.V
@@ -31,7 +31,7 @@ func (l L) L(t float64) vector.V { return vector.Add(l.p, vector.Scale(t, l.d)) 
 // Intuitively, we want to find the magnitude of the projected leg onto L; that
 // is, we care about
 //
-//   ||v - P||
+//	||v - P||
 //
 // Therefore, we need a factor of ||D|| in the denominator.
 //
