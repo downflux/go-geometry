@@ -49,3 +49,17 @@ func (r M) Union(s R) {
 		r.Max().M().SetX(i, math.Max(r.Max()[i], s.Max()[i]))
 	}
 }
+
+// Scale will expand or shrink each dimension of the AABB by the given scalar.
+//
+// If we want to expand or shrink by the total volume instead, we can use
+//
+//	b.Scale(math.Pow(c, 1.0 / b.Min().Dimension()))
+func (r M) Scale(c float64) {
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		min := r.Min().X(i)
+		max := r.Max().X(i)
+
+		r.Max().M().SetX(i, min+((max-min)*c))
+	}
+}

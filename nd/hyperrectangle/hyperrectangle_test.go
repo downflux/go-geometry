@@ -1,12 +1,92 @@
 package hyperrectangle
 
 import (
+	"math"
 	"testing"
 
 	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
-	"github.com/google/go-cmp/cmp"
 )
+
+func TestScale(t *testing.T) {
+	type config struct {
+		name string
+		r    R
+		c    float64
+		want R
+	}
+
+	configs := []config{
+		{
+			name: "Trivial",
+			r: *New(
+				[]float64{5, 5},
+				[]float64{15, 15},
+			),
+			c: 1,
+			want: *New(
+				[]float64{5, 5},
+				[]float64{15, 15},
+			),
+		},
+		{
+			name: "Shrink",
+			r: *New(
+				[]float64{5, 5},
+				[]float64{15, 15},
+			),
+			c: 0.5,
+			want: *New(
+				[]float64{5, 5},
+				[]float64{10, 10},
+			),
+		},
+		{
+			name: "Shrink/Volume",
+			r: *New(
+				[]float64{5, 5},
+				[]float64{15, 15},
+			),
+			c: math.Pow(0.25, 0.5),
+			want: *New(
+				[]float64{5, 5},
+				[]float64{10, 10},
+			),
+		},
+		{
+			name: "Expand",
+			r: *New(
+				[]float64{5, 5},
+				[]float64{15, 15},
+			),
+			c: 2,
+			want: *New(
+				[]float64{5, 5},
+				[]float64{25, 25},
+			),
+		},
+		{
+			name: "Expand/Volume",
+			r: *New(
+				[]float64{5, 5},
+				[]float64{15, 15},
+			),
+			c: math.Pow(4.0, 0.5),
+			want: *New(
+				[]float64{5, 5},
+				[]float64{25, 25},
+			),
+		},
+	}
+
+	for _, c := range configs {
+		t.Run(c.name, func(t *testing.T) {
+			if got := Scale(c.r, c.c); !Within(got, c.want) {
+				t.Errorf("Scale() = %v, want = %v", got, c.want)
+			}
+		})
+	}
+}
 
 func TestDisjoint(t *testing.T) {
 	type config struct {
@@ -112,15 +192,8 @@ func TestUnion(t *testing.T) {
 
 	for _, c := range testConfigs {
 		t.Run(c.name, func(t *testing.T) {
-			got := Union(c.r, c.s)
-			if diff := cmp.Diff(
-				c.want,
-				got,
-				cmp.AllowUnexported(
-					R{},
-				),
-			); diff != "" {
-				t.Errorf("Union() mismatch (-want +got):\n%v", diff)
+			if got := Union(c.r, c.s); !Within(c.want, got) {
+				t.Errorf("Union() = %v, want = %v", got, c.want)
 			}
 		})
 	}
@@ -262,14 +335,8 @@ func TestIntersect(t *testing.T) {
 			if ok != c.wantSuccess {
 				t.Errorf("Intersect() = _, %v, want = _, %v", ok, c.wantSuccess)
 			}
-			if diff := cmp.Diff(
-				c.want,
-				got,
-				cmp.AllowUnexported(
-					R{},
-				),
-			); diff != "" {
-				t.Errorf("Intersect() mismatch (-want +got):\n%v", diff)
+			if !Within(got, c.want) {
+				t.Errorf("Intersect() = %v, want = %v", got, c.want)
 			}
 		})
 	}
