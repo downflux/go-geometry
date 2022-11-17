@@ -64,6 +64,16 @@ func Union(r R, s R) R {
 	return b.R()
 }
 
+func Scale(r R, c float64) R {
+	b := M(*New(
+		vector.V(make([]float64, r.Min().Dimension())),
+		vector.V(make([]float64, r.Min().Dimension())),
+	))
+	b.Copy(r)
+	b.Scale(c)
+	return b.R()
+}
+
 // Contains checks if the input rectangle r fully encloses s. r is a closed
 // interval.
 func Contains(r R, s R) bool {
