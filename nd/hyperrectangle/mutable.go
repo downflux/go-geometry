@@ -9,17 +9,17 @@ import (
 type M R
 
 func (r M) R() R          { return R(r) }
-func (r M) Min() vector.V { return R(r).Min() }
-func (r M) Max() vector.V { return R(r).Max() }
+func (r M) Min() vector.M { return R(r).Min().M() }
+func (r M) Max() vector.M { return R(r).Max().M() }
 
 func (r M) Copy(s R) {
-	r.Min().M().Copy(s.Min())
-	r.Max().M().Copy(s.Max())
+	r.Min().Copy(s.Min())
+	r.Max().Copy(s.Max())
 }
 
 func (r M) Zero() {
-	r.Min().M().Zero()
-	r.Max().M().Zero()
+	r.Min().Zero()
+	r.Max().Zero()
 }
 
 func (r M) Intersect(s R) bool {
@@ -28,8 +28,8 @@ func (r M) Intersect(s R) bool {
 	}
 
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		r.Min().M().SetX(i, math.Max(r.Min()[i], s.Min()[i]))
-		r.Max().M().SetX(i, math.Min(r.Max()[i], s.Max()[i]))
+		r.Min().SetX(i, math.Max(r.Min()[i], s.Min()[i]))
+		r.Max().SetX(i, math.Min(r.Max()[i], s.Max()[i]))
 
 		if r.Min()[i] > r.Max()[i] {
 			return false
@@ -45,7 +45,7 @@ func (r M) Union(s R) {
 	}
 
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		r.Min().M().SetX(i, math.Min(r.Min()[i], s.Min()[i]))
-		r.Max().M().SetX(i, math.Max(r.Max()[i], s.Max()[i]))
+		r.Min().SetX(i, math.Min(r.Min()[i], s.Min()[i]))
+		r.Max().SetX(i, math.Max(r.Max()[i], s.Max()[i]))
 	}
 }
