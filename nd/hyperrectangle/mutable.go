@@ -60,6 +60,6 @@ func (r M) Scale(c float64) {
 		min := r.Min().X(i)
 		max := r.Max().X(i)
 
-		r.Max().M().SetX(i, min+((max-min)*c))
+		r.Max().SetX(i, min+((max-min)*c))
 	}
 }
