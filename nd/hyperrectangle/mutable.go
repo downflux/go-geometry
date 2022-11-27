@@ -13,8 +13,8 @@ func (r M) Min() vector.M { return R(r).Min().M() }
 func (r M) Max() vector.M { return R(r).Max().M() }
 
 func (r M) Copy(s R) {
-	r.Min().Copy(s.Min())
-	r.Max().Copy(s.Max())
+	copy(r.Min(), s.Min())
+	copy(r.Max(), s.Max())
 }
 
 func (r M) Zero() {
@@ -28,8 +28,8 @@ func (r M) Intersect(s R) bool {
 	}
 
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		r.Min().SetX(i, math.Max(r.Min()[i], s.Min()[i]))
-		r.Max().SetX(i, math.Min(r.Max()[i], s.Max()[i]))
+		r.Min()[i] = math.Max(r.Min()[i], s.Min()[i])
+		r.Max()[i] = math.Min(r.Max()[i], s.Max()[i])
 
 		if r.Min()[i] > r.Max()[i] {
 			return false
@@ -45,8 +45,8 @@ func (r M) Union(s R) {
 	}
 
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		r.Min().SetX(i, math.Min(r.Min()[i], s.Min()[i]))
-		r.Max().SetX(i, math.Max(r.Max()[i], s.Max()[i]))
+		r.Min()[i] = math.Min(r.Min()[i], s.Min()[i])
+		r.Max()[i] = math.Max(r.Max()[i], s.Max()[i])
 	}
 }
 
@@ -57,9 +57,9 @@ func (r M) Union(s R) {
 //	b.Scale(math.Pow(c, 1.0 / b.Min().Dimension()))
 func (r M) Scale(c float64) {
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		min := r.Min().X(i)
-		max := r.Max().X(i)
+		min := r.Min()[i]
+		max := r.Max()[i]
 
-		r.Max().SetX(i, min+((max-min)*c))
+		r.Max()[i] = min + ((max - min) * c)
 	}
 }

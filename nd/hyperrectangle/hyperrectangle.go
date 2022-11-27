@@ -37,16 +37,16 @@ func (r R) D() vector.V   { return vector.Sub(r.Max(), r.Min()) }
 func (r R) In(v vector.V) bool {
 	success := true
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		success = success && (r.Min().X(i) <= v.X(i) && v.X(i) <= r.Max().X(i))
+		success = success && (r.Min()[i] <= v[i] && v[i] <= r.Max()[i])
 	}
 	return success
 }
 
 func Intersect(r R, s R) (R, bool) {
-	b := M(*New(
+	b := New(
 		vector.V(make([]float64, r.Min().Dimension())),
 		vector.V(make([]float64, r.Min().Dimension())),
-	))
+	).M()
 	b.Copy(r)
 	if ok := b.Intersect(s); ok {
 		return b.R(), ok
@@ -55,20 +55,20 @@ func Intersect(r R, s R) (R, bool) {
 }
 
 func Union(r R, s R) R {
-	b := M(*New(
+	b := New(
 		vector.V(make([]float64, r.Min().Dimension())),
 		vector.V(make([]float64, r.Min().Dimension())),
-	))
+	).M()
 	b.Copy(r)
 	b.Union(s)
 	return b.R()
 }
 
 func Scale(r R, c float64) R {
-	b := M(*New(
+	b := New(
 		vector.V(make([]float64, r.Min().Dimension())),
 		vector.V(make([]float64, r.Min().Dimension())),
-	))
+	).M()
 	b.Copy(r)
 	b.Scale(c)
 	return b.R()
@@ -82,7 +82,7 @@ func Contains(r R, s R) bool {
 	}
 
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		if s.Min().X(i) < r.Min().X(i) || s.Max().X(i) > r.Max().X(i) {
+		if s.Min()[i] < r.Min()[i] || s.Max()[i] > r.Max()[i] {
 			return false
 		}
 	}
@@ -95,7 +95,7 @@ func Disjoint(r R, s R) bool {
 	}
 
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		if (r.Min().X(i) < s.Min().X(i) && r.Max().X(i) < s.Min().X(i)) || (s.Min().X(i) < r.Min().X(i) && s.Max().X(i) < r.Min().X(i)) {
+		if (r.Min()[i] < s.Min()[i] && r.Max()[i] < s.Min()[i]) || (s.Min()[i] < r.Min()[i] && s.Max()[i] < r.Min()[i]) {
 			return true
 		}
 	}
@@ -105,7 +105,7 @@ func Disjoint(r R, s R) bool {
 func V(r R) float64 {
 	v := 1.0
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		v *= r.Max().X(i) - r.Min().X(i)
+		v *= r.Max()[i] - r.Min()[i]
 	}
 	return v
 }
@@ -115,8 +115,18 @@ func V(r R) float64 {
 // rectangular prism.
 func SA(r R) float64 {
 	k := r.Min().Dimension()
-	if k == 1 {
+	switch k {
+	case 1:
 		return 0
+	case 2:
+		dx := r.Max()[vector.AXIS_X] - r.Min()[vector.AXIS_X]
+		dy := r.Max()[vector.AXIS_Y] - r.Min()[vector.AXIS_Y]
+		return 2*dx + 2*dy
+	case 3:
+		dx := r.Max()[vector.AXIS_X] - r.Min()[vector.AXIS_X]
+		dy := r.Max()[vector.AXIS_Y] - r.Min()[vector.AXIS_Y]
+		dz := r.Max()[vector.AXIS_Z] - r.Min()[vector.AXIS_Z]
+		return 2*dx*dy + 2*dy*dz + 2*dx*dz
 	}
 
 	var sa float64
