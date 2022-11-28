@@ -35,6 +35,28 @@ func rh(min float64, max float64, d vector.D) R {
 	return *New(rmin, rmax)
 }
 
+func BenchmarkIn(b *testing.B) {
+	r, v := rh(min, max, dimension), rv(min, max, dimension)
+	for i := 0; i < b.N; i++ {
+		r.In(v)
+	}
+}
+
+func BenchmarkIntersect(b *testing.B) {
+	b.Run("Unbuffered", func(b *testing.B) {
+		r, s := rh(min, max, dimension), rh(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			Intersect(r, s)
+		}
+	})
+	b.Run("Buffered", func(b *testing.B) {
+		r, s := rh(min, max, dimension), rh(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			r.M().Intersect(s)
+		}
+	})
+}
+
 func BenchmarkUnion(b *testing.B) {
 	b.Run("Unbuffered", func(b *testing.B) {
 		r, s := rh(min, max, dimension), rh(min, max, dimension)
