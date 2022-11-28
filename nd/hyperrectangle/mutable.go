@@ -1,8 +1,6 @@
 package hyperrectangle
 
 import (
-	"math"
-
 	"github.com/downflux/go-geometry/nd/vector"
 )
 
@@ -27,11 +25,18 @@ func (r M) Intersect(s R) bool {
 		panic("mismatching vector dimensions")
 	}
 
-	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		r.Min()[i] = math.Max(r.Min()[i], s.Min()[i])
-		r.Max()[i] = math.Min(r.Max()[i], s.Max()[i])
+	rmin, rmax := r.Min(), r.Max()
+	smin, smax := s.Min(), s.Max()
 
-		if r.Min()[i] > r.Max()[i] {
+	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+		if rmin[i] < smin[i] {
+			rmin[i] = smin[i]
+		}
+		if rmax[i] > smax[i] {
+			rmax[i] = smax[i]
+		}
+
+		if rmin[i] > rmax[i] {
 			return false
 		}
 	}
@@ -44,9 +49,16 @@ func (r M) Union(s R) {
 		panic("mismatching vector dimensions")
 	}
 
+	rmin, rmax := r.Min(), r.Max()
+	smin, smax := s.Min(), s.Max()
+
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		r.Min()[i] = math.Min(r.Min()[i], s.Min()[i])
-		r.Max()[i] = math.Max(r.Max()[i], s.Max()[i])
+		if smin[i] < rmin[i] {
+			rmin[i] = smin[i]
+		}
+		if smax[i] > rmax[i] {
+			rmax[i] = smax[i]
+		}
 	}
 }
 

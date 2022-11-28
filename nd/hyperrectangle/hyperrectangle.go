@@ -119,13 +119,17 @@ func SA(r R) float64 {
 	case 1:
 		return 0
 	case 2:
-		dx := r.Max()[vector.AXIS_X] - r.Min()[vector.AXIS_X]
-		dy := r.Max()[vector.AXIS_Y] - r.Min()[vector.AXIS_Y]
+		rmin, rmax := r.Min(), r.Max()
+
+		dx := rmax[vector.AXIS_X] - rmin[vector.AXIS_X]
+		dy := rmax[vector.AXIS_Y] - rmin[vector.AXIS_Y]
 		return 2*dx + 2*dy
 	case 3:
-		dx := r.Max()[vector.AXIS_X] - r.Min()[vector.AXIS_X]
-		dy := r.Max()[vector.AXIS_Y] - r.Min()[vector.AXIS_Y]
-		dz := r.Max()[vector.AXIS_Z] - r.Min()[vector.AXIS_Z]
+		rmin, rmax := r.Min(), r.Max()
+
+		dx := rmax[vector.AXIS_X] - rmin[vector.AXIS_X]
+		dy := rmax[vector.AXIS_Y] - rmin[vector.AXIS_Y]
+		dz := rmax[vector.AXIS_Z] - rmin[vector.AXIS_Z]
 		return 2*dx*dy + 2*dy*dz + 2*dx*dz
 	}
 
