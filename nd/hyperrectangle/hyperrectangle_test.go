@@ -2,11 +2,53 @@ package hyperrectangle
 
 import (
 	"math"
+	"math/rand"
 	"testing"
 
 	"github.com/downflux/go-geometry/epsilon"
 	"github.com/downflux/go-geometry/nd/vector"
 )
+
+const (
+	dimension = 100
+	min       = -1e10
+	max       = 1e10
+)
+
+func rn(min float64, max float64) float64 { return rand.Float64()*(max-min) + min }
+func rv(min float64, max float64, d vector.D) vector.V {
+	v := vector.V(make([]float64, d))
+	for i := vector.D(0); i < d; i++ {
+		v[i] = rn(min, max)
+	}
+	return v
+}
+func rh(min float64, max float64, d vector.D) R {
+	rmin := rv(min, max, d)
+	rmax := rv(min, max, d)
+
+	for i := vector.D(0); i < d; i++ {
+		if rmin[i] > rmax[i] {
+			rmin[i], rmax[i] = rmax[i], rmin[i]
+		}
+	}
+	return *New(rmin, rmax)
+}
+
+func BenchmarkUnion(b *testing.B) {
+	b.Run("Unbuffered", func(b *testing.B) {
+		r, s := rh(min, max, dimension), rh(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			Union(r, s)
+		}
+	})
+	b.Run("Buffered", func(b *testing.B) {
+		r, s := rh(min, max, dimension), rh(min, max, dimension)
+		for i := 0; i < b.N; i++ {
+			r.M().Union(s)
+		}
+	})
+}
 
 func TestScale(t *testing.T) {
 	type config struct {
