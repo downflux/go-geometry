@@ -35,7 +35,6 @@ func (r M) Intersect(s R) bool {
 		if rmax[i] > smax[i] {
 			rmax[i] = smax[i]
 		}
-
 		if rmin[i] > rmax[i] {
 			return false
 		}
@@ -52,10 +51,13 @@ func (r M) Union(s R) {
 	rmin, rmax := r.Min(), r.Max()
 	smin, smax := s.Min(), s.Max()
 
-	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+	k := r.Min().Dimension()
+	for i := vector.D(0); i < k; i++ {
 		if smin[i] < rmin[i] {
 			rmin[i] = smin[i]
 		}
+	}
+	for i := vector.D(0); i < k; i++ {
 		if smax[i] > rmax[i] {
 			rmax[i] = smax[i]
 		}
@@ -68,9 +70,11 @@ func (r M) Union(s R) {
 //
 //	b.Scale(math.Pow(c, 1.0 / b.Min().Dimension()))
 func (r M) Scale(c float64) {
+	rmin, rmax := r.Min(), r.Max()
+
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		min := r.Min()[i]
-		max := r.Max()[i]
+		min := rmin[i]
+		max := rmax[i]
 
 		r.Max()[i] = min + ((max - min) * c)
 	}
