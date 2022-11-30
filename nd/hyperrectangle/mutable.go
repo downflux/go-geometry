@@ -28,13 +28,18 @@ func (r M) Intersect(s R) bool {
 	rmin, rmax := r.Min(), r.Max()
 	smin, smax := s.Min(), s.Max()
 
-	for i := vector.D(0); i < r.Min().Dimension(); i++ {
+	k := rmin.Dimension()
+	for i := vector.D(0); i < k; i++ {
 		if rmin[i] < smin[i] {
 			rmin[i] = smin[i]
 		}
+	}
+	for i := vector.D(0); i < k; i++ {
 		if rmax[i] > smax[i] {
 			rmax[i] = smax[i]
 		}
+	}
+	for i := vector.D(0); i < k; i++ {
 		if rmin[i] > rmax[i] {
 			return false
 		}

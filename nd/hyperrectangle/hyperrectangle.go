@@ -94,8 +94,10 @@ func Disjoint(r R, s R) bool {
 		panic("mismatching vector dimensions")
 	}
 
-	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		if (r.Min()[i] < s.Min()[i] && r.Max()[i] < s.Min()[i]) || (s.Min()[i] < r.Min()[i] && s.Max()[i] < r.Min()[i]) {
+	rmin, rmax := r.Min(), r.Max()
+	smin, smax := s.Min(), s.Max()
+	for i := vector.D(0); i < rmin.Dimension(); i++ {
+		if rmax[i] < smin[i] || smax[i] < rmin[i] {
 			return true
 		}
 	}
