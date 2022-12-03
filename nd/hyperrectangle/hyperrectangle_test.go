@@ -1,6 +1,7 @@
 package hyperrectangle
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	"testing"
@@ -50,9 +51,13 @@ func BenchmarkV(b *testing.B) {
 }
 
 func BenchmarkSA(b *testing.B) {
-	r := rh(min, max, dimension)
-	for i := 0; i < b.N; i++ {
-		SA(r)
+	for _, k := range []vector.D{2, 3, dimension} {
+		b.Run(fmt.Sprintf("K=%v", k), func(b *testing.B) {
+			r := rh(min, max, k)
+			for i := 0; i < b.N; i++ {
+				SA(r)
+			}
+		})
 	}
 }
 
