@@ -42,6 +42,20 @@ func BenchmarkIn(b *testing.B) {
 	}
 }
 
+func BenchmarkV(b *testing.B) {
+	r := rh(min, max, dimension)
+	for i := 0; i < b.N; i++ {
+		V(r)
+	}
+}
+
+func BenchmarkSA(b *testing.B) {
+	r := rh(min, max, dimension)
+	for i := 0; i < b.N; i++ {
+		SA(r)
+	}
+}
+
 func BenchmarkIntersect(b *testing.B) {
 	b.Run("Unbuffered", func(b *testing.B) {
 		r, s := rh(min, max, dimension), rh(min, max, dimension)
