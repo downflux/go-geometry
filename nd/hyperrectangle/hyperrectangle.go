@@ -106,8 +106,9 @@ func Disjoint(r R, s R) bool {
 
 func V(r R) float64 {
 	v := 1.0
+	rmin, rmax := r.Min(), r.Max()
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		v *= r.Max()[i] - r.Min()[i]
+		v *= rmax[i] - rmin[i]
 	}
 	return v
 }
@@ -115,38 +116,43 @@ func V(r R) float64 {
 // SA returns the "surface area" of an N-dimensional interval. For N = 2, this
 // is the perimeter, and for N = 3, this is the total surface area of the
 // rectangular prism.
+//
+// See https://math.stackexchange.com/a/1898563 for the full method.
 func SA(r R) float64 {
 	k := r.Min().Dimension()
+
+	rmin, rmax := r.Min(), r.Max()
+
 	switch k {
 	case 1:
 		return 0
 	case 2:
-		rmin, rmax := r.Min(), r.Max()
-
 		dx := rmax[vector.AXIS_X] - rmin[vector.AXIS_X]
 		dy := rmax[vector.AXIS_Y] - rmin[vector.AXIS_Y]
 		return 2*dx + 2*dy
 	case 3:
-		rmin, rmax := r.Min(), r.Max()
-
 		dx := rmax[vector.AXIS_X] - rmin[vector.AXIS_X]
 		dy := rmax[vector.AXIS_Y] - rmin[vector.AXIS_Y]
 		dz := rmax[vector.AXIS_Z] - rmin[vector.AXIS_Z]
 		return 2*dx*dy + 2*dy*dz + 2*dx*dz
 	}
 
+	v := V(r)
 	var sa float64
-	min := make([]float64, k-1)
-	max := make([]float64, k-1)
-	for i := vector.D(0); i < k; i++ {
-		copy(min, r.Min()[:i])
-		copy(min[i:], r.Min()[i+1:])
-		copy(max, r.Max()[:i])
-		copy(max[i:], r.Max()[i+1:])
 
-		sa += V(*New(min, max))
+	// Special case for k = 1, where SA will return 1, even though the
+	// "true" area is 0. This is handled above.
+	//
+	// Note that this is an optimization from the StackExchange method -- we
+	// note that each dimension's contribution to the overall surface area
+	// is approximately the same (i.e. the volume), save that we are
+	// excluding the volume contribution from that iterated dimension.
+	for i := vector.D(0); i < k; i++ {
+		if d := rmax[i] - rmin[i]; d > 0 {
+			sa += 2.0 * v / d
+		}
 	}
-	return 2 * sa
+	return sa
 }
 
 func WithinEpsilon(g R, h R, e epsilon.E) bool {
