@@ -96,11 +96,20 @@ func Disjoint(r R, s R) bool {
 
 	rmin, rmax := r.Min(), r.Max()
 	smin, smax := s.Min(), s.Max()
-	for i := vector.D(0); i < rmin.Dimension(); i++ {
-		if rmax[i] < smin[i] || smax[i] < rmin[i] {
+	k := rmin.Dimension()
+
+	for i := vector.D(0); i < k; i++ {
+		if rmax[i] < smin[i] {
 			return true
 		}
 	}
+
+	for i := vector.D(0); i < k; i++ {
+		if smax[i] < rmin[i] {
+			return true
+		}
+	}
+
 	return false
 }
 
