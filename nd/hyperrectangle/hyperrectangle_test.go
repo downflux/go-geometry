@@ -36,6 +36,14 @@ func rh(min float64, max float64, d vector.D) R {
 	return *New(rmin, rmax)
 }
 
+func BenchmarkDisjoint(b *testing.B) {
+	r, s := rh(min, max, dimension), rh(min, max, dimension)
+	for i := 0; i < b.N; i++ {
+		Disjoint(r, s)
+	}
+
+}
+
 func BenchmarkIn(b *testing.B) {
 	r, v := rh(min, max, dimension), rv(min, max, dimension)
 	for i := 0; i < b.N; i++ {
