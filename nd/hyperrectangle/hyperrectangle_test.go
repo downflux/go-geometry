@@ -37,11 +37,14 @@ func rh(min float64, max float64, d vector.D) R {
 }
 
 func BenchmarkDisjoint(b *testing.B) {
-	r, s := rh(min, max, dimension), rh(min, max, dimension)
-	for i := 0; i < b.N; i++ {
-		Disjoint(r, s)
+	for _, k := range []vector.D{2, 3, dimension} {
+		b.Run(fmt.Sprintf("K=%v", k), func(b *testing.B) {
+			r, s := rh(min, max, k), rh(min, max, k)
+			for i := 0; i < b.N; i++ {
+				Disjoint(r, s)
+			}
+		})
 	}
-
 }
 
 func BenchmarkIn(b *testing.B) {
