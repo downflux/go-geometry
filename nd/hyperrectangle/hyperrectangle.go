@@ -96,8 +96,17 @@ func Disjoint(r R, s R) bool {
 
 	rmin, rmax := r.Min(), r.Max()
 	smin, smax := s.Min(), s.Max()
-	k := rmin.Dimension()
 
+	switch rmin.Dimension() {
+	case 1:
+		return rmax[0] < smin[0] || smax[0] < rmin[0]
+	case 2:
+		return rmax[0] < smin[0] || smax[0] < rmin[0] || rmax[1] < smin[1] || smax[1] < rmin[1]
+	case 3:
+		return rmax[0] < smin[0] || smax[0] < rmin[0] || rmax[1] < smin[1] || smax[1] < rmin[1] || rmax[2] < smin[2] || smax[2] < rmin[2]
+	}
+
+	k := rmin.Dimension()
 	for i := vector.D(0); i < k; i++ {
 		if rmax[i] < smin[i] {
 			return true
