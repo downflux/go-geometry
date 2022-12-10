@@ -36,6 +36,13 @@ func rh(min float64, max float64, d vector.D) R {
 	return *New(rmin, rmax)
 }
 
+func BenchmarkContains(b *testing.B) {
+	r, s := rh(min, max, 100), rh(min, max, 100)
+	for i := 0; i < b.N; i++ {
+		Contains(r, s)
+	}
+}
+
 func BenchmarkDisjoint(b *testing.B) {
 	for _, k := range []vector.D{1, 2, 3, dimension} {
 		b.Run(fmt.Sprintf("K=%v", k), func(b *testing.B) {
