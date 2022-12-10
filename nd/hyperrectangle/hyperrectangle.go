@@ -81,8 +81,11 @@ func Contains(r R, s R) bool {
 		panic("mismatching vector dimensions")
 	}
 
+	rmin, rmax := r.Min(), r.Max()
+	smin, smax := s.Min(), s.Max()
+
 	for i := vector.D(0); i < r.Min().Dimension(); i++ {
-		if s.Min()[i] < r.Min()[i] || s.Max()[i] > r.Max()[i] {
+		if smin[i] < rmin[i] || smax[i] > rmax[i] {
 			return false
 		}
 	}

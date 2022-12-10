@@ -37,7 +37,7 @@ func rh(min float64, max float64, d vector.D) R {
 }
 
 func BenchmarkContains(b *testing.B) {
-	r, s := rh(min, max, 100), rh(min, max, 100)
+	r, s := rh(min, max, dimension), rh(min, max, dimension)
 	for i := 0; i < b.N; i++ {
 		Contains(r, s)
 	}
