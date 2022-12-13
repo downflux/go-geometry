@@ -49,8 +49,6 @@ func IntersectHyperrectangle(r R, s hyperrectangle.R) bool {
 
 	for i := vector.D(0); i < k; i++ {
 		tl[i] = (smin[i] - p[i]) * u[i]
-	}
-	for i := vector.D(0); i < k; i++ {
 		tr[i] = (smax[i] - p[i]) * u[i]
 	}
 
@@ -76,13 +74,5 @@ func IntersectHyperrectangle(r R, s hyperrectangle.R) bool {
 		}
 	}
 
-	if tmin > tmax {
-		return false
-	}
-
-	if tmax < 0 {
-		return false
-	}
-
-	return true
+	return tmin <= tmax && tmax >= 0
 }
