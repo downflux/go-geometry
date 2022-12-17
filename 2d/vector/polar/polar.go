@@ -5,13 +5,15 @@ import (
 
 	"github.com/downflux/go-geometry/2d/vector"
 	"github.com/downflux/go-geometry/epsilon"
+
+	vnd "github.com/downflux/go-geometry/nd/vector"
 )
 
 type V vector.V
 
 const (
-	AXIS_R     = vector.AXIS_X
-	AXIS_THETA = vector.AXIS_Y
+	AXIS_R     = vnd.AXIS_X
+	AXIS_THETA = vnd.AXIS_Y
 )
 
 func New(r float64, theta float64) *V {
@@ -34,14 +36,14 @@ func Determinant(v V, u V) float64 {
 }
 
 func Polar(v vector.V) V {
-	x, y := v[vector.AXIS_R], v[vector.AXIS_THETA]
+	x, y := v[AXIS_R], v[AXIS_THETA]
 	return V(*vector.New(math.Sqrt(x*x+y*y), math.Atan2(y, x)))
 }
 
 // Normalize returns a vector whose anglular component is bound between 0 and
 // 2π.
 func Normalize(v V) V {
-	theta := math.Mod(v[vector.AXIS_THETA], 2*math.Pi)
+	theta := math.Mod(v[AXIS_THETA], 2*math.Pi)
 	// theta may be negative in the case the original polar coordinate is
 	// negative. Since we want to ensure the angle is positive, we have to
 	// take this into consideration.
