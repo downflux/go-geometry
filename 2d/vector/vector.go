@@ -14,6 +14,7 @@ func New(x float64, y float64) *V {
 
 func (v V) X() float64 { return v[vector.AXIS_X] }
 func (v V) Y() float64 { return v[vector.AXIS_Y] }
+func (v V) M() M       { return M(v) }
 
 func Determinant(v V, u V) float64 {
 	return v[vector.AXIS_X]*u[vector.AXIS_Y] - v[vector.AXIS_Y]*u[vector.AXIS_X]
