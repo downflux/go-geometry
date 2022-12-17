@@ -21,6 +21,7 @@ func New(r float64, theta float64) *V {
 	return &v
 }
 
+func (v V) M() M       { return M(v) }
 func (v V) R() float64 { return vector.V(v).X() }
 
 // Theta returns the angular component of the polar coordinate. Note that theta
@@ -35,22 +36,20 @@ func Determinant(v V, u V) float64 {
 	return v[AXIS_R] * u[AXIS_R] * math.Sin(v[AXIS_THETA]-u[AXIS_THETA])
 }
 
-func Polar(v vector.V) V {
-	x, y := v[AXIS_R], v[AXIS_THETA]
-	return V(*vector.New(math.Sqrt(x*x+y*y), math.Atan2(y, x)))
-}
-
 // Normalize returns a vector whose anglular component is bound between 0 and
 // 2π.
 func Normalize(v V) V {
-	theta := math.Mod(v[AXIS_THETA], 2*math.Pi)
-	// theta may be negative in the case the original polar coordinate is
-	// negative. Since we want to ensure the angle is positive, we have to
-	// take this into consideration.
-	if theta < 0 {
-		theta += 2 * math.Pi
-	}
-	return *New(v[AXIS_R], theta)
+	buf := M([]float64{0, 0})
+	buf.Copy(v)
+	buf.Normalize()
+	return buf.V()
+}
+
+func Unit(v V) V {
+	buf := M([]float64{0, 0})
+	buf.Copy(v)
+	buf.Unit()
+	return buf.V()
 }
 
 func Cartesian(v V) vector.V {
@@ -58,6 +57,11 @@ func Cartesian(v V) vector.V {
 		v[AXIS_R]*math.Cos(v[AXIS_THETA]),
 		v[AXIS_R]*math.Sin(v[AXIS_THETA]),
 	)
+}
+
+func Polar(v vector.V) V {
+	x, y := v[AXIS_R], v[AXIS_THETA]
+	return V(*vector.New(math.Sqrt(x*x+y*y), math.Atan2(y, x)))
 }
 
 func WithinEpsilon(v V, u V, e epsilon.E) bool {
