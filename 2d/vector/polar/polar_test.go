@@ -120,7 +120,7 @@ func TestPolar(t *testing.T) {
 		{
 			name: "Theta/Vertical/NegativeY",
 			v:    *vector.New(0, -1),
-			want: *New(1, -math.Pi/2),
+			want: *New(1, 3*math.Pi/2),
 		},
 		{
 			name: "Theta/Q1",
@@ -140,7 +140,7 @@ func TestPolar(t *testing.T) {
 		{
 			name: "Theta/Q4",
 			v:    *vector.New(1, -1),
-			want: *New(math.Sqrt(2), -math.Pi/4),
+			want: *New(math.Sqrt(2), 7*math.Pi/4),
 		},
 	}
 

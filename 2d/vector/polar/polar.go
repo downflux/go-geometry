@@ -61,7 +61,10 @@ func Cartesian(v V) vector.V {
 
 func Polar(v vector.V) V {
 	x, y := v[AXIS_R], v[AXIS_THETA]
-	return V(*vector.New(math.Sqrt(x*x+y*y), math.Atan2(y, x)))
+	buf := M([]float64{0, 0})
+	buf.Copy(V(*vector.New(math.Sqrt(x*x+y*y), math.Atan2(y, x))))
+	buf.Normalize()
+	return buf.V()
 }
 
 func WithinEpsilon(v V, u V, e epsilon.E) bool {
