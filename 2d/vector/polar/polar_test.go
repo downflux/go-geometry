@@ -173,10 +173,10 @@ func TestWithin(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "Within/Rotate/False",
+			name: "Within/Rotate",
 			u:    *New(1, 1),
 			v:    *New(1, 1+2*math.Pi),
-			want: false,
+			want: true,
 		},
 		{
 			name: "Within/Rotate/R=0",

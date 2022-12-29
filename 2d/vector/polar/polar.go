@@ -68,6 +68,6 @@ func Polar(v vector.V) V {
 }
 
 func WithinEpsilon(v V, u V, e epsilon.E) bool {
-	return (e.Within(v[AXIS_R], 0) && e.Within(u[AXIS_R], 0)) || vector.WithinEpsilon(vector.V(v), vector.V(u), e)
+	return (e.Within(v[AXIS_R], 0) && e.Within(u[AXIS_R], 0)) || (e.Within(v[AXIS_R], u[AXIS_R]) && e.Within(math.Mod(v[AXIS_THETA], 2*math.Pi), math.Mod(u[AXIS_THETA], 2*math.Pi)))
 }
 func Within(v, u V) bool { return WithinEpsilon(v, u, epsilon.DefaultE) }
